@@ -123,8 +123,8 @@ function howToReadDiagram() {
       ${callout(170, 210, ["Circle Size Reference: 3%"])}
 
       <!-- sample cell — guide line stops at the bubble's right edge (161 + r17) -->
-      <line x1="92" y1="252" x2="178" y2="252" stroke="${line}" stroke-width="0.5"/>
-      <circle cx="92" cy="252" r="1.6" fill="${line}"/>
+      <line x1="92" y1="252" x2="178" y2="252" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
+      <circle cx="92" cy="252" r="1.6" fill="rgba(255,255,255,0.2)"/>
       <text x="0" y="256" fill="#cfcfcf" font-size="13">Neoplasms</text>
       <text x="110" y="257" fill="${teal}" font-size="14" font-weight="600">5</text>
       <circle cx="161" cy="252" r="17" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="0.5"/>
