@@ -187,31 +187,6 @@ body {
   margin: 20px 0 8px;
 }
 
-.level2__scale {
-  display: flex;
-  align-items: flex-end;
-  gap: 20px;
-  margin: 24px 0;
-}
-
-.level2__scale-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-
-.level2__scale-item .l2-bubble {
-  background: var(--c-teal-light);
-  position: static;
-  transform: none;
-}
-
-.level2__scale-label {
-  font-size: 11px;
-  color: var(--c-text-muted);
-}
-
 .level2__paragraph {
   font-size: 13px;
   line-height: 1.6;

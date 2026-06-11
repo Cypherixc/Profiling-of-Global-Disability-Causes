@@ -88,11 +88,50 @@ function bubbleCell({ value, color, rank, edge, z }) {
   `;
 }
 
-// Annotated sample explaining how to read a cell — exported from Figma
-// (node 1435:3504) as a self-contained SVG.
+// Annotated "How to read it" — hand-built to match Figma node 1435:3504.
+// One graphic: four callout lines + a sample cell, then the size scale below.
+// Geometry mirrors the Figma export (viewBox 346 x 471).
 function howToReadDiagram() {
-  return `<img class="level2__howto" src="/assets/how-to-read.svg"
-    alt="How to read a cell: the health condition name, its rank, circle size showing prevalence, and a 3% size reference ring." />`;
+  const teal = "#24aca4";
+  const grey = "rgba(255,255,255,0.25)";
+  // callout line + its wrapped label
+  const callout = (x, topY, lines) => `
+    <line x1="${x}" y1="${topY}" x2="${x}" y2="252" stroke="${grey}" stroke-width="0.5"/>
+    <circle cx="${x}" cy="${topY}" r="1.6" fill="${grey}"/>
+    <text x="${x + 8}" y="${topY + 4}" fill="#cfcfcf" font-size="11">${lines
+      .map((t, i) => `<tspan x="${x + 8}" dy="${i === 0 ? 0 : 14}">${t}</tspan>`)
+      .join("")}</text>`;
+  // size-scale bubble (radius from the extracted Figma geometry)
+  const scale = (cx, r, label) => `
+    <circle cx="${cx}" cy="430" r="${r}" fill="${teal}" fill-opacity="0.8" stroke="#fff" stroke-width="0.5"/>
+    <text x="${cx}" y="466" fill="#b8b8b8" font-size="11" text-anchor="middle">${label}</text>`;
+
+  return `
+    <svg class="level2__howto" viewBox="0 0 360 478" role="img"
+      aria-label="How to read a cell: the health condition name, its rank, circle size showing prevalence, a 3% reference ring, and a size scale.">
+      ${callout(40, 14, ["The Name of Health Conditions", "Causing Disability"])}
+      ${callout(120, 58, ["The Rank of Health Conditions", "Causing Disability"])}
+      ${callout(158, 110, [
+        "Larger Circles Present higher",
+        "Prevalence of Health Conditions",
+        "Causing Disability in Specific Region",
+      ])}
+      ${callout(170, 206, ["Circle Size Reference: 3%"])}
+
+      <!-- sample cell -->
+      <line x1="92" y1="252" x2="190" y2="252" stroke="${grey}" stroke-width="0.5"/>
+      <circle cx="92" cy="252" r="1.6" fill="${grey}"/>
+      <text x="0" y="256" fill="#cfcfcf" font-size="12">Neoplasms</text>
+      <text x="110" y="257" fill="${teal}" font-size="13" font-weight="600">5</text>
+      <circle cx="161" cy="252" r="17" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="0.5"/>
+      <circle cx="161" cy="252" r="12" fill="${teal}" stroke="#202020" stroke-width="1"/>
+
+      <!-- size scale -->
+      ${scale(35, 8, "1%")}
+      ${scale(100, 15, "3%")}
+      ${scale(178, 20, "5%")}
+      ${scale(270, 23, "6.5%")}
+    </svg>`;
 }
 
 export function renderLevel2Bubbles() {
@@ -129,17 +168,6 @@ export function renderLevel2Bubbles() {
         <aside class="level2__aside">
           <h3 class="level2__how">How to read it?</h3>
           ${howToReadDiagram()}
-          <div class="level2__scale">
-            ${[0.01, 0.03, 0.05, 0.065]
-              .map(
-                (v) => `
-              <div class="level2__scale-item">
-                <span class="l2-bubble" style="width:${diameter(v)}px;height:${diameter(v)}px"></span>
-                <span class="level2__scale-label">${(v * 100).toFixed(v === 0.065 ? 1 : 0)}%</span>
-              </div>`
-              )
-              .join("")}
-          </div>
           <p class="level2__paragraph">${PARAGRAPH}</p>
         </aside>
 
