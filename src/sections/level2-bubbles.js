@@ -76,10 +76,11 @@ function buildModel() {
   return { byCause, ranks };
 }
 
-function bubbleCell({ value, color, rank }) {
+function bubbleCell({ value, color, rank, edge }) {
   const d = diameter(value);
+  const edgeClass = edge ? ` l2-cell--${edge}` : "";
   return `
-    <div class="l2-cell">
+    <div class="l2-cell${edgeClass}">
       ${rank ? `<span class="l2-rank" style="color:${color}">${rank}</span>` : ""}
       <span class="l2-ring" style="width:${REF_3PCT}px;height:${REF_3PCT}px"></span>
       <span class="l2-bubble" style="width:${d}px;height:${d}px;background:${color}"></span>
@@ -96,11 +97,12 @@ export function renderLevel2Bubbles() {
   `;
 
   const rows = ROW_ORDER.map((cause) => {
-    const cells = REGIONS.map((r) =>
+    const cells = REGIONS.map((r, i) =>
       bubbleCell({
         value: byCause[cause]?.[r.key] || 0,
         color: r.color,
         rank: ranks[cause]?.[r.key],
+        edge: i === 0 ? "start" : i === REGIONS.length - 1 ? "end" : null,
       })
     ).join("");
     return `<div class="l2-cell l2-cell--label">${cause}</div>${cells}`;

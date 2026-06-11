@@ -257,10 +257,32 @@ body {
   top: 50%;
   left: 0;
   right: 0;
-  height: 1px;
+  height: 0.5px;
   background: rgba(96, 96, 96, 0.8);
   transform: translateY(-50%);
   z-index: 0;
+}
+
+/* Endpoint dots at the two ends of each row's guide line. */
+.l2-cell--start::after,
+.l2-cell--end::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(96, 96, 96, 0.8);
+  transform: translateY(-50%);
+  z-index: 0;
+}
+
+.l2-cell--start::after {
+  left: 0;
+}
+
+.l2-cell--end::after {
+  right: 0;
 }
 
 .l2-ring,
