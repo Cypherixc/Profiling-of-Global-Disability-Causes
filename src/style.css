@@ -42,6 +42,112 @@ body {
   padding-inline: var(--pad-x);
 }
 
+/* ---------- Generic section ---------- */
+.section {
+  padding-block: clamp(56px, 9vh, 120px);
+}
+
+.section__title {
+  margin: 0;
+  font-weight: 500;
+  font-size: clamp(22px, 2.4vw, 32px);
+  line-height: 1.2;
+  color: var(--c-text);
+}
+
+.section__rule {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.25);
+  margin-top: 20px;
+}
+
+/* ---------- Region share ---------- */
+.region-share__body {
+  display: grid;
+  grid-template-columns: 1fr 0.78fr;
+  gap: clamp(32px, 4vw, 72px);
+  align-items: center;
+  margin-top: clamp(40px, 6vw, 96px);
+}
+
+.region-share__map img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.region-legend {
+  list-style: none;
+  margin: 24px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 10px 28px;
+  width: fit-content;
+}
+
+.region-legend__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--c-text-muted);
+}
+
+.region-legend__swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.region-legend__swatch--empty {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.region-share__stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(28px, 4vw, 56px) clamp(24px, 3vw, 48px);
+}
+
+.region-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.region-stat__value {
+  font-family: "Helvetica Neue", Arial, "Satoshi", sans-serif;
+  font-weight: 500;
+  font-size: clamp(32px, 3.6vw, 48px);
+  line-height: 1;
+  color: var(--accent);
+}
+
+.region-stat__rule {
+  height: 1px;
+  background: var(--accent);
+  opacity: 0.6;
+}
+
+.region-stat__name {
+  font-weight: 500;
+  font-size: clamp(16px, 1.5vw, 20px);
+  color: var(--accent);
+}
+
+@media (max-width: 860px) {
+  .region-share__body {
+    grid-template-columns: 1fr;
+  }
+  .region-legend {
+    grid-template-columns: repeat(2, auto);
+  }
+}
+
 /* ---------- Hero ---------- */
 .hero {
   position: relative;
