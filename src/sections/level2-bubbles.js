@@ -102,15 +102,16 @@ function howToReadDiagram() {
       .map((t, i) => `<tspan x="${x + 8}" dy="${i === 0 ? 0 : 15}">${t}</tspan>`)
       .join("")}</text>`;
   // size-scale bubble: label on top, line down to a centre dot inside the bubble
-  const SCALE_CY = 452;
+  const SCALE_LABEL_Y = 322;
+  const SCALE_CY = 376;
   const scale = (cx, r, label) => `
-    <text x="${cx}" y="398" fill="#b8b8b8" font-size="12" text-anchor="middle">${label}</text>
-    <line x1="${cx}" y1="408" x2="${cx}" y2="${SCALE_CY}" stroke="${line}" stroke-width="0.5"/>
+    <text x="${cx}" y="${SCALE_LABEL_Y}" fill="#b8b8b8" font-size="12" text-anchor="middle">${label}</text>
+    <line x1="${cx}" y1="${SCALE_LABEL_Y + 10}" x2="${cx}" y2="${SCALE_CY}" stroke="${line}" stroke-width="0.5"/>
     <circle cx="${cx}" cy="${SCALE_CY}" r="${r}" fill="${teal}" fill-opacity="0.8" stroke="#fff" stroke-width="0.5"/>
     <circle cx="${cx}" cy="${SCALE_CY}" r="1.6" fill="#fff"/>`;
 
   return `
-    <svg class="level2__howto" viewBox="0 0 360 480" role="img"
+    <svg class="level2__howto" viewBox="0 0 360 404" role="img"
       aria-label="How to read a cell: the health condition name, its rank, circle size showing prevalence, a 3% reference ring, and a size scale.">
       ${callout(40, 14, ["The Name of Health Conditions", "Causing Disability"])}
       ${callout(120, 58, ["The Rank of Health Conditions", "Causing Disability"])}
@@ -121,8 +122,8 @@ function howToReadDiagram() {
       ])}
       ${callout(170, 210, ["Circle Size Reference: 3%"])}
 
-      <!-- sample cell -->
-      <line x1="92" y1="252" x2="190" y2="252" stroke="${line}" stroke-width="0.5"/>
+      <!-- sample cell — guide line stops at the bubble's right edge (161 + r17) -->
+      <line x1="92" y1="252" x2="178" y2="252" stroke="${line}" stroke-width="0.5"/>
       <circle cx="92" cy="252" r="1.6" fill="${line}"/>
       <text x="0" y="256" fill="#cfcfcf" font-size="13">Neoplasms</text>
       <text x="110" y="257" fill="${teal}" font-size="14" font-weight="600">5</text>
