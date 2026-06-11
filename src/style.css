@@ -45,75 +45,109 @@ body {
 /* ---------- Hero ---------- */
 .hero {
   position: relative;
-  min-height: 620px;
+  min-height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  overflow: hidden;
-  padding-block: clamp(64px, 10vh, 140px);
+  justify-content: center;
+  gap: clamp(40px, 8vh, 96px);
+  padding-block: clamp(48px, 8vh, 120px);
+  padding-inline: var(--pad-x);
+}
+
+/* The composed unit: text + rings together. Aspect ratio matches Figma
+   Frame 121 (1327×620) so the whole block scales as one, capped at 1440. */
+.hero__stage {
+  position: relative;
+  width: 100%;
+  max-width: 1327px;
+  aspect-ratio: 1327 / 620;
 }
 
 .hero__rings {
   position: absolute;
-  right: clamp(-120px, -4vw, 0px);
-  top: 50%;
-  transform: translateY(-50%);
-  width: min(669px, 50%);
+  right: 0;
+  top: 0;
+  /* 670 / 1327 of the stage width — keeps the SVG's 1:1 (undistorted) ratio */
+  width: 50.49%;
   height: auto;
   pointer-events: none;
   user-select: none;
   opacity: 0;
-  animation: ring-in 1.2s 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: ring-in 1.3s 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .hero__content {
-  position: relative;
+  position: absolute;
   z-index: 1;
-  max-width: 877px;
+  left: 0;
+  top: 22.9%; /* 142 / 620 */
+  width: 66.1%; /* 877 / 1327 */
   display: flex;
   flex-direction: column;
-  gap: 48px;
+  gap: clamp(24px, 3vw, 48px);
 }
 
 .hero__title {
   margin: 0;
   font-weight: 700;
-  font-size: clamp(28px, 3.4vw, 36px);
+  font-size: clamp(24px, 2.7vw, 36px);
   line-height: 1.18;
 }
 
 .hero__body {
   margin: 0;
   font-weight: 400;
-  font-size: clamp(16px, 1.6vw, 20px);
+  font-size: clamp(13px, 1.5vw, 20px);
   line-height: 1.55;
   color: var(--c-text-muted);
-  max-width: 60ch;
+}
+
+.hero__scroll {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--c-text-muted);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: color 0.2s ease;
+}
+
+.hero__scroll:hover {
+  color: var(--c-text);
+}
+
+.hero__scroll svg {
+  animation: scroll-bounce 1.8s ease-in-out infinite;
 }
 
 @keyframes ring-in {
   from {
     opacity: 0;
-    transform: translateY(-50%) scale(0.92) rotate(-6deg);
+    transform: scale(0.92) rotate(-6deg);
   }
   to {
     opacity: 1;
-    transform: translateY(-50%) scale(1) rotate(0);
+    transform: scale(1) rotate(0);
   }
 }
 
-@media (max-width: 760px) {
-  .hero__rings {
-    opacity: 0.25;
-    width: 90%;
-    right: -20%;
+@keyframes scroll-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
   }
-  .hero__content {
-    gap: 28px;
+  50% {
+    transform: translateY(6px);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero__rings {
+  .hero__rings,
+  .hero__scroll svg {
     animation: none;
     opacity: 1;
   }
