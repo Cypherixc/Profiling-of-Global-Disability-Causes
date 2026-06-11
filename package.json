@@ -4,11 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build:data": "node scripts/build-data.mjs",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^8.0.12"
+    "vite": "^8.0.12",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   }
 }
