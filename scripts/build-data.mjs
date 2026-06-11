@@ -40,8 +40,16 @@ const mapRow = (r) => ({
   upper: round(r.upper, 6),
 });
 
-const level2 = pct.filter((r) => r.level === 2).map(mapRow);
 const level3 = pct.filter((r) => r.level === 3).map(mapRow);
+
+// "Injuries" is a level-2 group, but in the source it only appears as a
+// level-3 row (cause_name "injuries"). Fold it in so level2 has the full
+// 20 groups the original Tableau viz plots.
+const injuries = pct
+  .filter((r) => r.level === 3 && r.cause_name === "injuries")
+  .map((r) => ({ ...mapRow(r), cause: "Injuries", level: 2 }));
+
+const level2 = [...pct.filter((r) => r.level === 2).map(mapRow), ...injuries];
 
 // Top N level-3 causes per region (by mean), for the ranked bubble matrix.
 const topLevel3 = {};
