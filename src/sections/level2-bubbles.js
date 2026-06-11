@@ -93,36 +93,39 @@ function bubbleCell({ value, color, rank, edge, z }) {
 // Geometry mirrors the Figma export (viewBox 346 x 471).
 function howToReadDiagram() {
   const teal = "#24aca4";
-  const grey = "rgba(255,255,255,0.25)";
+  const line = "rgba(255,255,255,1)"; // full-opacity guide lines
   // callout line + its wrapped label
   const callout = (x, topY, lines) => `
-    <line x1="${x}" y1="${topY}" x2="${x}" y2="252" stroke="${grey}" stroke-width="0.5"/>
-    <circle cx="${x}" cy="${topY}" r="1.6" fill="${grey}"/>
-    <text x="${x + 8}" y="${topY + 4}" fill="#cfcfcf" font-size="11">${lines
-      .map((t, i) => `<tspan x="${x + 8}" dy="${i === 0 ? 0 : 14}">${t}</tspan>`)
+    <line x1="${x}" y1="${topY}" x2="${x}" y2="252" stroke="${line}" stroke-width="0.5"/>
+    <circle cx="${x}" cy="${topY}" r="1.6" fill="${line}"/>
+    <text x="${x + 8}" y="${topY + 4}" fill="#cfcfcf" font-size="12">${lines
+      .map((t, i) => `<tspan x="${x + 8}" dy="${i === 0 ? 0 : 15}">${t}</tspan>`)
       .join("")}</text>`;
-  // size-scale bubble (radius from the extracted Figma geometry)
+  // size-scale bubble: label on top, line down to a centre dot inside the bubble
+  const SCALE_CY = 452;
   const scale = (cx, r, label) => `
-    <circle cx="${cx}" cy="430" r="${r}" fill="${teal}" fill-opacity="0.8" stroke="#fff" stroke-width="0.5"/>
-    <text x="${cx}" y="466" fill="#b8b8b8" font-size="11" text-anchor="middle">${label}</text>`;
+    <text x="${cx}" y="398" fill="#b8b8b8" font-size="12" text-anchor="middle">${label}</text>
+    <line x1="${cx}" y1="408" x2="${cx}" y2="${SCALE_CY}" stroke="${line}" stroke-width="0.5"/>
+    <circle cx="${cx}" cy="${SCALE_CY}" r="${r}" fill="${teal}" fill-opacity="0.8" stroke="#fff" stroke-width="0.5"/>
+    <circle cx="${cx}" cy="${SCALE_CY}" r="1.6" fill="#fff"/>`;
 
   return `
-    <svg class="level2__howto" viewBox="0 0 360 478" role="img"
+    <svg class="level2__howto" viewBox="0 0 360 480" role="img"
       aria-label="How to read a cell: the health condition name, its rank, circle size showing prevalence, a 3% reference ring, and a size scale.">
       ${callout(40, 14, ["The Name of Health Conditions", "Causing Disability"])}
       ${callout(120, 58, ["The Rank of Health Conditions", "Causing Disability"])}
-      ${callout(158, 110, [
+      ${callout(158, 112, [
         "Larger Circles Present higher",
         "Prevalence of Health Conditions",
         "Causing Disability in Specific Region",
       ])}
-      ${callout(170, 206, ["Circle Size Reference: 3%"])}
+      ${callout(170, 210, ["Circle Size Reference: 3%"])}
 
       <!-- sample cell -->
-      <line x1="92" y1="252" x2="190" y2="252" stroke="${grey}" stroke-width="0.5"/>
-      <circle cx="92" cy="252" r="1.6" fill="${grey}"/>
-      <text x="0" y="256" fill="#cfcfcf" font-size="12">Neoplasms</text>
-      <text x="110" y="257" fill="${teal}" font-size="13" font-weight="600">5</text>
+      <line x1="92" y1="252" x2="190" y2="252" stroke="${line}" stroke-width="0.5"/>
+      <circle cx="92" cy="252" r="1.6" fill="${line}"/>
+      <text x="0" y="256" fill="#cfcfcf" font-size="13">Neoplasms</text>
+      <text x="110" y="257" fill="${teal}" font-size="14" font-weight="600">5</text>
       <circle cx="161" cy="252" r="17" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="0.5"/>
       <circle cx="161" cy="252" r="12" fill="${teal}" stroke="#202020" stroke-width="1"/>
 
