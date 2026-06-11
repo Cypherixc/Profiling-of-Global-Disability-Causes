@@ -76,15 +76,46 @@ function buildModel() {
   return { byCause, ranks };
 }
 
-function bubbleCell({ value, color, rank, edge }) {
+function bubbleCell({ value, color, rank, edge, z }) {
   const d = diameter(value);
   const edgeClass = edge ? ` l2-cell--${edge}` : "";
   return `
-    <div class="l2-cell${edgeClass}">
+    <div class="l2-cell${edgeClass}" style="z-index:${z}">
       ${rank ? `<span class="l2-rank" style="color:${color}">${rank}</span>` : ""}
       <span class="l2-ring" style="width:${REF_3PCT}px;height:${REF_3PCT}px"></span>
       <span class="l2-bubble" style="width:${d}px;height:${d}px;background:${color}"></span>
     </div>
+  `;
+}
+
+// Annotated sample explaining how to read a cell (Figma node 1435:3504).
+function howToReadDiagram() {
+  const line = (x, y1) =>
+    `<line x1="${x}" y1="${y1}" x2="${x}" y2="246" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>`;
+  const label = (x, y, lines) =>
+    `<text x="${x}" y="${y}" fill="#b8b8b8" font-size="10.5">${lines
+      .map((t, i) => `<tspan x="${x}" dy="${i === 0 ? 0 : 13}">${t}</tspan>`)
+      .join("")}</text>`;
+  return `
+    <svg class="level2__howto" viewBox="0 0 384 270" role="img"
+      aria-label="How to read a cell: name, rank, circle size and 3% reference ring">
+      ${line(50, 22)}${line(116, 66)}${line(156, 116)}${line(168, 206)}
+      ${label(54, 12, ["The Name of Health Conditions", "Causing Disability"])}
+      ${label(120, 56, ["The Rank of Health Conditions", "Causing Disability"])}
+      ${label(160, 106, [
+        "Larger Circles Present higher",
+        "Prevalence of Health Conditions",
+        "Causing Disability in Specific Region",
+      ])}
+      ${label(172, 200, ["Circle Size Reference: 3%"])}
+      <!-- sample row -->
+      <line x1="92" y1="246" x2="182" y2="246" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+      <circle cx="92" cy="246" r="2" fill="rgba(255,255,255,0.25)"/>
+      <text x="0" y="250" fill="#b8b8b8" font-size="12">Neoplasms</text>
+      <text x="108" y="251" fill="#24aca4" font-size="13" font-weight="600">5</text>
+      <circle cx="150" cy="246" r="15" fill="#24aca4" stroke="#202020" stroke-width="1"/>
+      <circle cx="150" cy="246" r="11" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1"/>
+    </svg>
   `;
 }
 
@@ -96,16 +127,19 @@ export function renderLevel2Bubbles() {
     ${REGIONS.map((r) => `<div class="l2-head">${r.name}</div>`).join("")}
   `;
 
-  const rows = ROW_ORDER.map((cause) => {
+  const rows = ROW_ORDER.map((cause, rowIdx) => {
+    // Upper rows stack above lower rows so an overlapping bubble covers the one below.
+    const z = ROW_ORDER.length - rowIdx;
     const cells = REGIONS.map((r, i) =>
       bubbleCell({
         value: byCause[cause]?.[r.key] || 0,
         color: r.color,
         rank: ranks[cause]?.[r.key],
         edge: i === 0 ? "start" : i === REGIONS.length - 1 ? "end" : null,
+        z,
       })
     ).join("");
-    return `<div class="l2-cell l2-cell--label">${cause}</div>${cells}`;
+    return `<div class="l2-cell l2-cell--label" style="z-index:${z}">${cause}</div>${cells}`;
   }).join("");
 
   const section = document.createElement("section");
@@ -118,6 +152,7 @@ export function renderLevel2Bubbles() {
       <div class="level2__body">
         <aside class="level2__aside">
           <h3 class="level2__how">How to read it?</h3>
+          ${howToReadDiagram()}
           <div class="level2__scale">
             ${[0.01, 0.03, 0.05, 0.065]
               .map(
