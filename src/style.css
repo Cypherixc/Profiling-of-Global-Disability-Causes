@@ -197,6 +197,7 @@ body {
 .level2__scale-item .l2-bubble {
   background: var(--c-teal-light);
   position: static;
+  transform: none;
 }
 
 .level2__scale-label {
@@ -249,15 +250,36 @@ body {
   height: 52px;
 }
 
-.l2-ring {
+/* Per-row guide line — spans the plotting cells, behind the marks. */
+.l2-cell:not(.l2-cell--label)::before {
+  content: "";
   position: absolute;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(96, 96, 96, 0.8);
+  transform: translateY(-50%);
+  z-index: 0;
+}
+
+.l2-ring,
+.l2-bubble {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   border-radius: 50%;
 }
 
 .l2-bubble {
-  position: absolute;
-  border-radius: 50%;
+  z-index: 1;
+}
+
+/* Reference ring always sits above the bubble, larger or smaller. */
+.l2-ring {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  z-index: 2;
 }
 
 .l2-rank {
