@@ -70,10 +70,19 @@ body {
   margin-top: clamp(40px, 6vw, 96px);
 }
 
-.region-share__map img {
+.region-share__map-svg svg {
   display: block;
   width: 100%;
   height: auto;
+}
+
+/* Hover linking: dim everything not under the cursor. */
+.map-region {
+  transition: opacity 250ms ease;
+}
+
+.region-share.is-highlighting .is-dimmed {
+  opacity: 0.2;
 }
 
 .region-legend {
@@ -117,6 +126,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  transition: opacity 250ms ease;
 }
 
 .region-stat__value {
