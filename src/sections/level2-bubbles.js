@@ -62,12 +62,16 @@ const PARAGRAPH =
 function buildModel() {
   const byCause = {};
   data.level2.forEach((r) => {
-    (byCause[r.cause] = byCause[r.cause] || {})[r.region] = r.mean;
+    (byCause[r.cause] = byCause[r.cause] || {})[r.region] = {
+      mean: r.mean,
+      lower: r.lower,
+      upper: r.upper,
+    };
   });
   const ranks = {};
   REGIONS.forEach(({ key }) => {
     const sorted = Object.entries(byCause)
-      .map(([cause, v]) => ({ cause, m: v[key] || 0 }))
+      .map(([cause, v]) => ({ cause, m: v[key]?.mean || 0 }))
       .sort((a, b) => b.m - a.m);
     sorted.slice(0, 5).forEach((x, i) => {
       (ranks[x.cause] = ranks[x.cause] || {})[key] = i + 1;
@@ -76,14 +80,21 @@ function buildModel() {
   return { byCause, ranks };
 }
 
-function bubbleCell({ value, color, rank, edge, z }) {
+const pctText = (v) => (v == null ? "—" : (v * 100).toFixed(2) + "%");
+
+function bubbleCell({ cause, regionName, rec, color, rank, edge, z }) {
+  const value = rec?.mean || 0;
   const d = diameter(value);
   const edgeClass = edge ? ` l2-cell--${edge}` : "";
+  const dataAttrs =
+    `data-cause="${cause}" data-region="${regionName}" data-color="${color}" ` +
+    `data-mean="${value}" data-lower="${rec?.lower ?? ""}" data-upper="${rec?.upper ?? ""}" ` +
+    `data-rank="${rank || ""}"`;
   return `
     <div class="l2-cell${edgeClass}" style="z-index:${z}">
       ${rank ? `<span class="l2-rank" style="color:${color}">${rank}</span>` : ""}
       <span class="l2-ring" style="width:${REF_3PCT}px;height:${REF_3PCT}px"></span>
-      <span class="l2-bubble" style="width:${d}px;height:${d}px;background:${color}"></span>
+      <span class="l2-bubble" ${dataAttrs} style="width:${d}px;height:${d}px;background:${color}"></span>
     </div>
   `;
 }
@@ -151,7 +162,9 @@ export function renderLevel2Bubbles() {
     const z = ROW_ORDER.length - rowIdx;
     const cells = REGIONS.map((r, i) =>
       bubbleCell({
-        value: byCause[cause]?.[r.key] || 0,
+        cause,
+        regionName: r.name,
+        rec: byCause[cause]?.[r.key],
         color: r.color,
         rank: ranks[cause]?.[r.key],
         edge: i === 0 ? "start" : i === REGIONS.length - 1 ? "end" : null,
@@ -183,6 +196,74 @@ export function renderLevel2Bubbles() {
         </div>
       </div>
     </div>
+    <div class="l2-tooltip" role="status" aria-live="polite" hidden></div>
   `;
+
+  wireBubbleHover(section);
   return section;
+}
+
+function wireBubbleHover(section) {
+  const matrix = section.querySelector(".level2__matrix");
+  const tip = section.querySelector(".l2-tooltip");
+  let active = null;
+  let savedZ = "";
+
+  const show = (bubble) => {
+    if (active === bubble) return;
+    clear();
+    active = bubble;
+    section.classList.add("is-bubble-hover");
+    bubble.classList.add("is-active");
+    bubble.style.boxShadow = `0 0 24px 0 ${bubble.dataset.color}66`; // 40% alpha
+    const cell = bubble.closest(".l2-cell");
+    savedZ = cell.style.zIndex;
+    cell.style.zIndex = "999";
+
+    const { cause, region, color, mean, lower, upper, rank } = bubble.dataset;
+    const ci = lower && upper ? ` <span class="l2-tooltip__ci">(${pctText(+lower)}–${pctText(+upper)})</span>` : "";
+    tip.innerHTML = `
+      <div class="l2-tooltip__cause">${cause}</div>
+      <div class="l2-tooltip__region"><span class="l2-tooltip__dot" style="background:${color}"></span>${region}</div>
+      <div class="l2-tooltip__row"><span>Prevalence</span><strong>${pctText(+mean)}</strong></div>
+      <div class="l2-tooltip__row l2-tooltip__ci-row"><span>95% CI</span>${ci || "—"}</div>
+      ${rank ? `<div class="l2-tooltip__rank">#${rank} in ${region}</div>` : ""}
+    `;
+    tip.hidden = false;
+  };
+
+  const move = (e) => {
+    if (!active) return;
+    const pad = 14;
+    const w = tip.offsetWidth;
+    const h = tip.offsetHeight;
+    let x = e.clientX + pad;
+    let y = e.clientY + pad;
+    if (x + w > window.innerWidth - 8) x = e.clientX - w - pad;
+    if (y + h > window.innerHeight - 8) y = e.clientY - h - pad;
+    tip.style.left = `${x}px`;
+    tip.style.top = `${y}px`;
+  };
+
+  const clear = () => {
+    if (!active) return;
+    section.classList.remove("is-bubble-hover");
+    active.classList.remove("is-active");
+    active.style.boxShadow = "";
+    const cell = active.closest(".l2-cell");
+    if (cell) cell.style.zIndex = savedZ;
+    tip.hidden = true;
+    active = null;
+  };
+
+  matrix.addEventListener("mouseover", (e) => {
+    const b = e.target.closest(".l2-bubble");
+    if (b) show(b);
+  });
+  matrix.addEventListener("mousemove", move);
+  matrix.addEventListener("mouseout", (e) => {
+    // leaving a bubble for something that isn't the same bubble
+    const to = e.relatedTarget;
+    if (active && (!to || !active.contains(to))) clear();
+  });
 }
