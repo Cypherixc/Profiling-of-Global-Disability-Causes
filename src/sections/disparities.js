@@ -95,32 +95,6 @@ const TABS = [
         bars: { AFR: 0.49, AMR: 0.4, EMR: 0.58, EUR: 0.34, SEAR: 0.86, WPR: 0.3 },
         note: note("maternal and neonatal disorders"),
       },
-      {
-        condition: "Respiratory Infections and Tuberculosis",
-        image: "/assets/photos/sea-respiratory.jpg",
-        paragraph:
-          "Due to a relatively lower level of public health, the prevalence of disability caused by respiratory infections and tuberculosis in South-East Asia accounts for approximately 1.60% of the global disability population, which is roughly 170% higher than the average observed in the other five WHO regions.",
-        stats: [
-          { value: "35.0%", label: "of individuals with disabilities caused by respiratory infections and tuberculosis globally" },
-          { value: "170%", label: higher },
-        ],
-        axisMax: 1.75,
-        bars: { AFR: 0.65, AMR: 0.75, EMR: 0.6, EUR: 0.74, SEAR: 1.6, WPR: 0.22 },
-        note: note("respiratory infections and tuberculosis"),
-      },
-      {
-        condition: "Mental Disorders",
-        image: "/assets/photos/sea-mental.jpg",
-        paragraph:
-          "As the second leading cause of disabilities globally, mental health as a cause of disabilities is particularly prevalent in South-East Asia, where they account for 5.22% of the global disability population, which is approximately 74% greater than the average found in the other five WHO regions.",
-        stats: [
-          { value: "25.9%", label: "of individuals with disabilities caused by mental disorders globally" },
-          { value: "74%", label: higher },
-        ],
-        axisMax: 5.5,
-        bars: { AFR: 2.85, AMR: 3.34, EMR: 2.16, EUR: 2.75, SEAR: 5.22, WPR: 3.84 },
-        note: note("mental disorders"),
-      },
     ],
   },
   {
@@ -143,39 +117,52 @@ const TABS = [
   },
 ];
 
+// Per-region bar pattern (SVG tile, semi-transparent dark motif over the fill).
+const PATTERNS = {
+  AFR: [14, 14, `<path d="M4 4 L10 10 M10 4 L4 10" stroke="black" stroke-opacity="0.4" stroke-width="1.2"/>`], // cross
+  AMR: [14, 14, `<path d="M4 5 L10 5 L7 10 Z" fill="black" fill-opacity="0.4"/>`], // inverted triangle
+  EMR: [12, 12, `<circle cx="6" cy="6" r="1.7" fill="black" fill-opacity="0.42"/>`], // dots
+  EUR: [8, 8, `<path d="M4 0 V8" stroke="black" stroke-opacity="0.4" stroke-width="1.4"/>`], // vertical
+  SEAR: [10, 10, `<path d="M0 10 L10 0" stroke="black" stroke-opacity="0.4" stroke-width="1.4"/>`], // diagonal
+  WPR: [22, 9, `<path d="M0 4.5 Q5.5 0 11 4.5 T22 4.5" stroke="black" stroke-opacity="0.4" stroke-width="1.3" fill="none"/>`], // wavy
+};
+
+function patternURI(rg) {
+  const [w, h, body] = PATTERNS[rg];
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">${body}</svg>`;
+  return `url('data:image/svg+xml,${encodeURIComponent(svg)}')`;
+}
+
+const NON_FOCUS_GRAY = "#8d9096";
+
 function barChart(card, focusRegion) {
   const { axisMax } = card;
-  const gridVals = [axisMax, axisMax / 2, 0];
-  const grid = gridVals
-    .map(
-      (v) => `
-      <div class="disp-grid" style="bottom:${(v / axisMax) * 100}%">
-        <span class="disp-grid-label">${v.toFixed(v < 1 ? 1 : 1)}%</span>
-      </div>`
-    )
-    .join("");
 
   const bars = REGION_ORDER.map((rg) => {
     const v = card.bars[rg];
     const hPct = Math.min((v / axisMax) * 100, 100);
     const isFocus = rg === focusRegion;
-    const cls = isFocus ? `disp-bar disp-bar--focus disp-bar--${focusRegion}` : "disp-bar";
+    const color = isFocus ? REGION_COLOR[rg] : NON_FOCUS_GRAY;
     return `
       <div class="disp-bar-col">
-        <div class="disp-bar-wrap">
-          <span class="disp-bar-val">${v.toFixed(2)}%</span>
-          <div class="${cls}" style="--bar-color:${REGION_COLOR[rg]}; --bar-h:${hPct}%"></div>
-        </div>
-        <div class="disp-bar-name">${REGION_LABEL[rg]}</div>
+        <span class="disp-bar-val${isFocus ? " is-focus" : ""}">${v.toFixed(2)}%</span>
+        <div class="disp-bar" style="--bar-h:${hPct}%; background-color:${color}; background-image:${patternURI(rg)}"></div>
       </div>`;
   }).join("");
+
+  const names = REGION_ORDER.map(
+    (rg) => `<span class="disp-xlabel">${REGION_LABEL[rg]}</span>`
+  ).join("");
 
   return `
     <div class="disp-chart">
       <div class="disp-plot">
-        ${grid}
+        <span class="disp-axis-label disp-axis-label--max">${axisMax.toFixed(1)}%</span>
+        <span class="disp-axis-label disp-axis-label--zero">0.0%</span>
+        <div class="disp-ref"></div>
         <div class="disp-bars">${bars}</div>
       </div>
+      <div class="disp-xlabels">${names}</div>
     </div>`;
 }
 

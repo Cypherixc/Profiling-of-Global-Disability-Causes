@@ -713,7 +713,7 @@ body {
   color: var(--c-text-muted);
 }
 
-/* Bar chart with y-axis + reference gridlines */
+/* Bar chart with white axes + dashed reference line */
 .disp-chart {
   margin-bottom: 18px;
 }
@@ -721,31 +721,39 @@ body {
 .disp-plot {
   position: relative;
   height: 240px;
-  padding-left: 36px;
+  margin-left: 42px;
+  border-left: 1.5px solid #fff;   /* Y axis */
+  border-bottom: 1.5px solid #fff; /* X axis */
 }
 
-.disp-grid {
+.disp-axis-label {
+  position: absolute;
+  left: -38px;
+  width: 34px;
+  text-align: right;
+  font-size: 10px;
+  color: #fff;
+}
+.disp-axis-label--max { top: -6px; }
+.disp-axis-label--zero { bottom: -6px; }
+
+/* dashed reference line at the top of the scale, behind the bars */
+.disp-ref {
   position: absolute;
   left: 0;
   right: 0;
-  height: 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-.disp-grid-label {
-  position: absolute;
-  left: 0;
-  top: -7px;
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.4);
+  top: 0;
+  border-top: 1px dashed rgba(255, 255, 255, 0.45);
+  z-index: 0;
 }
 
 .disp-bars {
   position: absolute;
-  inset: 0 0 0 36px;
+  inset: 0;
   display: flex;
   align-items: flex-end;
   gap: clamp(6px, 1.5vw, 18px);
+  z-index: 1;
 }
 
 .disp-bar-col {
@@ -754,67 +762,38 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-}
-
-.disp-bar-wrap {
-  position: relative;
-  flex: 1;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
+  align-items: center;
 }
 
 .disp-bar-val {
-  position: absolute;
-  bottom: var(--bar-h);
-  margin-bottom: 4px;
-  font-size: 10px;
+  font-size: 11px;
   color: var(--c-text-muted);
+  margin-bottom: 5px;
   white-space: nowrap;
+}
+.disp-bar-val.is-focus {
+  color: #fff;
 }
 
 .disp-bar {
-  width: min(70%, 46px);
-  height: 0;
-  border-radius: 3px 3px 0 0;
-  background: rgba(255, 255, 255, 0.16);
-  transition: height 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  width: min(72%, 48px);
+  height: var(--bar-h);
+  background-repeat: repeat;
+  /* no border radius — square-topped bars sitting on the X axis */
 }
 
-/* per-region pattern on the focal bar */
-.disp-bar--focus {
-  background-color: var(--bar-color);
-}
-.disp-bar--AFR.disp-bar--focus {
-  background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.28) 0 5px, transparent 5px 10px);
-}
-.disp-bar--AMR.disp-bar--focus {
-  background-image: radial-gradient(rgba(0,0,0,0.32) 1.6px, transparent 1.7px);
-  background-size: 9px 9px;
-}
-.disp-bar--SEAR.disp-bar--focus {
-  background-image: repeating-linear-gradient(0deg, rgba(0,0,0,0.26) 0 4px, transparent 4px 9px);
-}
-.disp-bar--WPR.disp-bar--focus {
-  background-image:
-    repeating-linear-gradient(0deg, rgba(0,0,0,0.22) 0 6px, transparent 6px 12px),
-    repeating-linear-gradient(90deg, rgba(0,0,0,0.22) 0 6px, transparent 6px 12px);
-}
-.disp-bar--EMR.disp-bar--focus {
-  background-image: repeating-linear-gradient(-45deg, rgba(0,0,0,0.28) 0 5px, transparent 5px 10px);
-}
-.disp-bar--EUR.disp-bar--focus {
-  background-image: radial-gradient(rgba(0,0,0,0.3) 1.6px, transparent 1.7px);
-  background-size: 9px 9px;
+.disp-xlabels {
+  display: flex;
+  gap: clamp(6px, 1.5vw, 18px);
+  margin: 10px 0 0 42px;
 }
 
-.disp-bar-name {
-  margin-top: 10px;
-  font-size: 11px;
-  color: var(--c-text-muted);
+.disp-xlabel {
+  flex: 1;
   text-align: center;
+  font-size: 11px;
   line-height: 1.2;
-  min-height: 26px;
+  color: var(--c-text-muted);
 }
 
 .disp-note {
