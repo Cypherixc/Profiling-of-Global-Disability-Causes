@@ -46,19 +46,6 @@ const TABS = [
         bars: { AFR: 0.34, AMR: 0.03, EMR: 0.02, EUR: 0.03, SEAR: 0.03, WPR: 0.02 },
         note: note("AIDS and sexually transmitted infections"),
       },
-      {
-        condition: "Neglected Tropical Diseases and Malaria",
-        image: "/assets/photos/africa-ntd.jpg",
-        paragraph:
-          "Africa faces significant challenges related to neglected tropical diseases and malaria, coupled with limited access to medical resources and services in many areas. (Source: WHO Global report on neglected tropical diseases 2023) The proportion of disabilities caused by Neglected Tropical Diseases (NTDs) and malaria in Africa accounts for approximately 0.67% of the global disability population, which is roughly 5 times higher than the average observed in the other five WHO regions.",
-        stats: [
-          { value: "56.4%", label: "of individuals with disabilities caused by NTDs and malaria globally" },
-          { value: "5 times", label: higher },
-        ],
-        axisMax: 0.8,
-        bars: { AFR: 0.67, AMR: 0.21, EMR: 0.04, EUR: 0.04, SEAR: 0.11, WPR: 0.12 },
-        note: note("neglected tropical diseases and malaria"),
-      },
     ],
   },
   {
