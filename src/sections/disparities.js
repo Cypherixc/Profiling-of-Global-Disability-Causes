@@ -80,6 +80,42 @@ const TABS = [
     ],
   },
   {
+    region: "EMR",
+    cards: [
+      {
+        condition: "Nutritional Deficiencies",
+        image: "/assets/photos/eastern-mediterranean.jpg",
+        paragraph:
+          "Across the Eastern Mediterranean Region, protracted armed conflict and humanitarian crises — in countries such as Afghanistan, Yemen, Sudan, Somalia and Syria — disrupt food systems, agriculture and health services, driving widespread undernutrition and micronutrient deficiencies. As a result, nutritional deficiencies account for approximately 0.06% of the global disability population in this region, roughly 178% higher than the average observed in the other five WHO regions. (Source: WHO EMRO; Global Burden of Disease 2021)",
+        stats: [
+          { value: "21.4%", label: "of individuals with disabilities caused by nutritional deficiencies globally" },
+          { value: "178%", label: higher },
+        ],
+        axisMax: 0.08,
+        bars: { AFR: 0.04, AMR: 0.01, EMR: 0.06, EUR: 0.01, SEAR: 0.04, WPR: 0.01 },
+        note: note("nutritional deficiencies"),
+      },
+    ],
+  },
+  {
+    region: "EUR",
+    cards: [
+      {
+        condition: "Neoplasms",
+        image: "/assets/photos/europe.jpg",
+        paragraph:
+          "Europe has the world's oldest population, and age is the single biggest risk factor for cancer. Combined with extensive screening and diagnosis, high exposure to lifestyle risk factors (tobacco, alcohol, diet) and advanced treatment that lets people live longer with disease, this gives Europe a high prevalence of disability from neoplasms. They account for approximately 0.31% of the global disability population in this region, roughly 160% higher than the average observed in the other five WHO regions. (Source: GLOBOCAN 2022; Global Burden of Disease 2021)",
+        stats: [
+          { value: "25.3%", label: "of individuals with disabilities caused by neoplasms globally" },
+          { value: "160%", label: higher },
+        ],
+        axisMax: 0.4,
+        bars: { AFR: 0.04, AMR: 0.24, EMR: 0.06, EUR: 0.31, SEAR: 0.06, WPR: 0.21 },
+        note: note("neoplasms"),
+      },
+    ],
+  },
+  {
     region: "SEAR",
     cards: [
       {
