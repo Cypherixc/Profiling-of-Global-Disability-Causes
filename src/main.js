@@ -2,6 +2,7 @@ import "./style.css";
 import { renderHero } from "./sections/hero.js";
 import { renderRegionShare } from "./sections/region-share.js";
 import { renderLevel2Bubbles } from "./sections/level2-bubbles.js";
+import { renderLevel3Top5 } from "./sections/level3-top5.js";
 
 const app = document.querySelector("#app");
 
@@ -11,4 +12,5 @@ const main = document.createElement("div");
 main.id = "main";
 main.append(renderRegionShare());
 main.append(renderLevel2Bubbles());
+main.append(renderLevel3Top5());
 app.append(main);
