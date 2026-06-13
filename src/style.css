@@ -657,6 +657,8 @@ body {
   position: absolute;
   left: 14px;
   bottom: 14px;
+  display: inline-flex;
+  align-items: center;
   max-width: calc(100% - 28px);
   background: rgba(18, 18, 18, 0.7);
   backdrop-filter: blur(8px) saturate(1.2);
@@ -669,27 +671,52 @@ body {
   padding: 7px 12px;
   cursor: help;
   outline: none;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* Collapsed shows the label; on hover/focus the label collapses away and the
+   description wipes open — both width and opacity transition. */
+.disp-alt__label,
+.disp-alt__desc {
+  display: inline-block;
+  overflow: hidden;
+  transition: max-width 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.28s ease;
+}
+
+.disp-alt__label {
+  max-width: 120px;
+  opacity: 1;
 }
 
 .disp-alt__desc {
-  display: none;
+  max-width: 0;
+  opacity: 0;
 }
 
 .disp-alt:hover .disp-alt__label,
-.disp-alt:focus .disp-alt__label,
 .disp-alt:focus-within .disp-alt__label {
-  display: none;
+  max-width: 0;
+  opacity: 0;
 }
 
 .disp-alt:hover .disp-alt__desc,
-.disp-alt:focus .disp-alt__desc,
 .disp-alt:focus-within .disp-alt__desc {
-  display: inline;
+  max-width: min(78vw, 380px);
+  opacity: 1;
 }
 
 .disp-alt:focus,
 .disp-alt:focus-within {
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.45);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .disp-alt__label,
+  .disp-alt__desc {
+    transition: opacity 0.2s ease;
+  }
 }
 
 .disp-content {
