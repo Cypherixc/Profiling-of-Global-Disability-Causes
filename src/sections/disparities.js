@@ -126,7 +126,7 @@ const PATTERNS = {
   EMR: [6, 6, `<circle cx="3" cy="3" r="0.9" fill="black" fill-opacity="0.42"/>`], // dots
   EUR: [7, 9, `<path d="M2 1 V4 M5 5.5 V8.5" stroke="black" stroke-opacity="0.4" stroke-width="1"/>`], // staggered short dashes
   SEAR: [5, 5, `<path d="M0 5 L5 0" stroke="black" stroke-opacity="0.4" stroke-width="0.8"/>`], // diagonal
-  WPR: [18, 7, `<path d="M0 3.5 Q4.5 2 9 3.5 T18 3.5" stroke="black" stroke-opacity="0.4" stroke-width="1" fill="none"/>`], // wavy (smaller amplitude, longer wavelength)
+  WPR: [26, 8, `<path d="M0 4 Q6.5 2 13 4 T26 4" stroke="black" stroke-opacity="0.45" stroke-width="1.2" fill="none"/>`], // wavy — long gentle waves, even rows
 };
 
 function patternURI(rg) {
