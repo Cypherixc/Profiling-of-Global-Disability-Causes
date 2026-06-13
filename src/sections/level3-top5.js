@@ -105,12 +105,8 @@ export function renderLevel3Top5() {
 
           <div class="level3__detail-info">
             <div class="level3__detail-head">
-              <div class="level3__detail-icon"></div>
-              <div>
-                <div class="level3__detail-rank"></div>
-                <h3 class="level3__detail-cause"></h3>
-                <div class="level3__detail-region"></div>
-              </div>
+              <h3 class="level3__detail-cause"></h3>
+              <div class="level3__detail-region"></div>
             </div>
             <div class="level3__detail-stat">
               <span>Prevalence</span><strong class="level3__detail-prev"></strong>
@@ -144,8 +140,6 @@ export function renderLevel3Top5() {
 function wireDetail(section) {
   const bubble = section.querySelector(".level3__focus-bubble");
   const particles = section.querySelector(".level3__particles");
-  const iconEl = section.querySelector(".level3__detail-icon");
-  const rankEl = section.querySelector(".level3__detail-rank");
   const causeEl = section.querySelector(".level3__detail-cause");
   const regionEl = section.querySelector(".level3__detail-region");
   const descEl = section.querySelector(".level3__detail-desc");
@@ -177,11 +171,8 @@ function wireDetail(section) {
     bubble.setAttribute("fill", color);
 
     const info = conditionInfo(cause);
-    iconEl.innerHTML = info.icon;
-    iconEl.style.color = color;
-    rankEl.textContent = `#${rank} in ${region}`;
     causeEl.textContent = cause;
-    regionEl.innerHTML = `<span class="level3__detail-dot" style="background:${color}"></span>${region}`;
+    regionEl.innerHTML = `<span class="level3__detail-dot" style="background:${color}"></span>${region} · #${rank}`;
     descEl.textContent = info.desc;
     prevEl.textContent = pctText(+mean);
     ciEl.textContent = lower && upper ? `${pctText(+lower)}–${pctText(+upper)}` : "—";
