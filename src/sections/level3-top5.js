@@ -86,6 +86,8 @@ export function renderLevel3Top5() {
       <h2 class="section__title">Top 5 level 3 Health Conditions Causing Disability by WHO Regions</h2>
       <div class="section__rule"></div>
 
+      <p class="level3__paragraph">${PARAGRAPH}</p>
+
       <div class="level3__body">
         <aside class="level3__aside">
           <div class="level3__focus">
@@ -130,8 +132,6 @@ export function renderLevel3Top5() {
           <div class="level3__hint">Click any bubble to explore each condition</div>
         </div>
       </div>
-
-      <p class="level3__paragraph">${PARAGRAPH}</p>
     </div>
     <div class="l2-tooltip" role="status" aria-live="polite" hidden></div>
   `;

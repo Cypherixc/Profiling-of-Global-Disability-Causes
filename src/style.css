@@ -380,9 +380,9 @@ body {
 /* ---------- Level 3 top-5 ---------- */
 .level3__body {
   display: grid;
-  grid-template-columns: 440px 1fr;
+  grid-template-columns: 320px 1fr;
   gap: clamp(32px, 4vw, 64px);
-  margin-top: clamp(32px, 5vw, 64px);
+  margin-top: clamp(28px, 4vw, 48px);
   align-items: start;
 }
 
@@ -392,13 +392,13 @@ body {
   top: 24px;
 }
 
-/* Intro paragraph sits full-width below the whole chart. */
+/* Intro paragraph sits full-width above the chart. */
 .level3__paragraph {
   font-size: 13px;
   line-height: 1.6;
   color: var(--c-text-muted);
   max-width: 900px;
-  margin: clamp(40px, 5vw, 72px) 0 0;
+  margin: 20px 0 0;
 }
 
 .level3__hint {
