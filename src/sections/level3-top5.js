@@ -118,18 +118,20 @@ export function renderLevel3Top5() {
             </div>
             <p class="level3__detail-desc"></p>
           </div>
-
-          <p class="level3__paragraph">${PARAGRAPH}</p>
-          <div class="level3__detail-hint">Click any bubble to explore each condition</div>
         </aside>
 
-        <div class="level3__matrix-wrap">
-          <div class="level3__matrix">
-            ${header}
-            ${rows}
+        <div class="level3__matrix-col">
+          <div class="level3__matrix-wrap">
+            <div class="level3__matrix">
+              ${header}
+              ${rows}
+            </div>
           </div>
+          <div class="level3__hint">Click any bubble to explore each condition</div>
         </div>
       </div>
+
+      <p class="level3__paragraph">${PARAGRAPH}</p>
     </div>
     <div class="l2-tooltip" role="status" aria-live="polite" hidden></div>
   `;
