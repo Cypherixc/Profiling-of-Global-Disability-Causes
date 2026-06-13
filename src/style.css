@@ -380,32 +380,23 @@ body {
 /* ---------- Level 3 top-5 ---------- */
 .level3__body {
   display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: clamp(24px, 3vw, 48px);
+  grid-template-columns: 440px 1fr;
+  gap: clamp(32px, 4vw, 64px);
   margin-top: clamp(32px, 5vw, 64px);
+  align-items: start;
 }
 
-.level3__how {
-  margin: 0 0 16px;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--c-text);
-  padding-bottom: 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
-}
-
-.level3__howto {
-  display: block;
-  width: 100%;
-  height: auto;
-  margin: 24px 0 8px;
+/* Focus column stays in view while the matrix scrolls. */
+.level3__aside {
+  position: sticky;
+  top: 24px;
 }
 
 .level3__paragraph {
   font-size: 13px;
   line-height: 1.6;
   color: var(--c-text-muted);
-  margin: 28px 0 0;
+  margin: 24px 0 0;
 }
 
 .level3__matrix-wrap {
@@ -495,25 +486,16 @@ body {
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9);
 }
 
-/* ---------- Level 3 detail / focus view ---------- */
-.level3__detail {
-  display: grid;
-  grid-template-columns: 340px 1fr;
-  gap: clamp(32px, 5vw, 72px);
-  align-items: center;
-  margin-top: clamp(48px, 7vw, 96px);
-  padding-top: clamp(40px, 6vw, 72px);
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
-}
-
+/* ---------- Level 3 detail / focus view (lives in the left column) ---------- */
 .level3__focus {
   position: relative;
-  justify-self: center;
+  display: flex;
+  justify-content: center;
 }
 
 .level3__focus-svg {
   display: block;
-  width: 340px;
+  width: 300px;
   max-width: 100%;
   height: auto;
 }
@@ -546,10 +528,21 @@ body {
   }
 }
 
-.level3__detail-icon {
-  width: 56px;
-  height: 56px;
+.level3__detail-info {
+  margin-top: 20px;
+}
+
+.level3__detail-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
   margin-bottom: 16px;
+}
+
+.level3__detail-icon {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
 }
 
 .level3__detail-icon svg {
@@ -558,16 +551,17 @@ body {
 }
 
 .level3__detail-rank {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--c-text-muted);
-  margin-bottom: 6px;
+  margin-bottom: 2px;
 }
 
 .level3__detail-cause {
-  margin: 0 0 10px;
-  font-size: clamp(22px, 2.6vw, 30px);
+  margin: 0 0 4px;
+  font-size: clamp(20px, 2.2vw, 26px);
   font-weight: 700;
   color: var(--c-text);
+  line-height: 1.15;
 }
 
 .level3__detail-region {
@@ -575,7 +569,7 @@ body {
   align-items: center;
   gap: 8px;
   color: var(--c-text-muted);
-  margin-bottom: 18px;
+  font-size: 13px;
 }
 
 .level3__detail-dot {
@@ -617,9 +611,12 @@ body {
 }
 
 @media (max-width: 900px) {
-  .level3__body,
-  .level3__detail {
+  .level3__body {
     grid-template-columns: 1fr;
+  }
+  /* Sticky overlaps the matrix when stacked — only pin on wide screens. */
+  .level3__aside {
+    position: static;
   }
 }
 

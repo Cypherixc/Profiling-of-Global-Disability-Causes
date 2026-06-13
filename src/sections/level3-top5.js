@@ -42,41 +42,6 @@ const PARAGRAPH =
   "incorporates various data sources, such as medical records, scientific " +
   "articles, health surveys, and insurance data.";
 
-// Annotated "How to read it" — hand-built to match Figma node 1435:3899.
-function howToReadDiagram() {
-  const teal = "#24aca4";
-  const line = "rgba(255,255,255,1)";
-  const callout = (x, topY, lines) => `
-    <line x1="${x}" y1="${topY}" x2="${x}" y2="250" stroke="${line}" stroke-width="0.5"/>
-    <circle cx="${x}" cy="${topY}" r="1.6" fill="${line}"/>
-    <text x="${x + 8}" y="${topY + 4}" fill="#cfcfcf" font-size="12">${lines
-      .map((t, i) => `<tspan x="${x + 8}" dy="${i === 0 ? 0 : 15}">${t}</tspan>`)
-      .join("")}</text>`;
-
-  const cx = 60;
-  const cy = 250;
-  return `
-    <svg class="level3__howto" viewBox="0 0 360 330" role="img"
-      aria-label="How to read a cell: the rank, the specific health condition name, circle size as a percentage of the global disability population, and 2% and 4% size references.">
-      ${callout(70, 14, ["The Rank of Health Conditions", "Causing Disability"])}
-      ${callout(96, 70, ["Circle Size Reference: 4.00%"])}
-      ${callout(108, 116, ["Circle Size Reference: 2.00%"])}
-      ${callout(120, 168, ["Percentage of Global", "Disability Population"])}
-
-      <!-- sample bubble with 4% and 2% reference rings -->
-      <circle cx="${cx}" cy="${cy}" r="${REF_4PCT / 2}" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="0.5"/>
-      <circle cx="${cx}" cy="${cy}" r="${diameter(0.02) / 2}" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="0.5"/>
-      <circle cx="${cx}" cy="${cy}" r="${diameter(0.018) / 2}" fill="${teal}" stroke="#202020" stroke-width="1"/>
-      <text x="${cx}" y="14" fill="#cfcfcf" font-size="22" font-weight="600" text-anchor="middle">1</text>
-      <line x1="${cx}" y1="24" x2="${cx}" y2="${cy - REF_4PCT / 2}" stroke="${line}" stroke-width="0.5"/>
-
-      <text x="${cx + 36}" y="${cy + 40}" fill="#cfcfcf" font-size="12">Specific Health</text>
-      <text x="${cx + 36}" y="${cy + 55}" fill="#cfcfcf" font-size="12">Condition Name</text>
-      <line x1="${cx}" y1="${cy + 22}" x2="${cx + 30}" y2="${cy + 42}" stroke="${line}" stroke-width="0.5"/>
-      <text x="${cx}" y="${cy + 78}" fill="#fff" font-size="13" text-anchor="middle">Low Back Pain</text>
-    </svg>`;
-}
-
 function bubbleCell(region, item, z) {
   const value = item.mean;
   const d = diameter(value);
@@ -123,9 +88,39 @@ export function renderLevel3Top5() {
 
       <div class="level3__body">
         <aside class="level3__aside">
-          <h3 class="level3__how">How to read it?</h3>
-          ${howToReadDiagram()}
+          <div class="level3__focus">
+            <svg class="level3__focus-svg" viewBox="0 0 300 300" aria-hidden="true">
+              <!-- filled bubble first, reference rings drawn on top so they stay visible -->
+              <circle class="level3__focus-bubble" cx="150" cy="150" r="0" fill="#4690cd" />
+              ${DET_RINGS.map((v) => {
+                const r = detRadius(v);
+                return `<circle cx="150" cy="150" r="${r}" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+                  <text x="150" y="${150 - r - 5}" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.5)">${v * 100}%</text>`;
+              }).join("")}
+            </svg>
+            <div class="level3__particles" aria-hidden="true"></div>
+          </div>
+
+          <div class="level3__detail-info">
+            <div class="level3__detail-head">
+              <div class="level3__detail-icon"></div>
+              <div>
+                <div class="level3__detail-rank"></div>
+                <h3 class="level3__detail-cause"></h3>
+                <div class="level3__detail-region"></div>
+              </div>
+            </div>
+            <div class="level3__detail-stat">
+              <span>Prevalence</span><strong class="level3__detail-prev"></strong>
+            </div>
+            <div class="level3__detail-stat">
+              <span>95% CI</span><span class="level3__detail-ci"></span>
+            </div>
+            <p class="level3__detail-desc"></p>
+          </div>
+
           <p class="level3__paragraph">${PARAGRAPH}</p>
+          <div class="level3__detail-hint">Click any bubble to explore each condition</div>
         </aside>
 
         <div class="level3__matrix-wrap">
@@ -133,36 +128,6 @@ export function renderLevel3Top5() {
             ${header}
             ${rows}
           </div>
-        </div>
-      </div>
-
-      <div class="level3__detail">
-        <div class="level3__focus">
-          <svg class="level3__focus-svg" viewBox="0 0 300 300" aria-hidden="true">
-            <!-- filled bubble first, reference rings drawn on top so they stay visible -->
-            <circle class="level3__focus-bubble" cx="150" cy="150" r="0" fill="#4690cd" />
-            ${DET_RINGS.map((v) => {
-              const r = detRadius(v);
-              return `<circle cx="150" cy="150" r="${r}" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
-                <text x="150" y="${150 - r - 5}" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.5)">${v * 100}%</text>`;
-            }).join("")}
-          </svg>
-          <div class="level3__particles" aria-hidden="true"></div>
-        </div>
-
-        <div class="level3__detail-info">
-          <div class="level3__detail-icon"></div>
-          <div class="level3__detail-rank"></div>
-          <h3 class="level3__detail-cause"></h3>
-          <div class="level3__detail-region"></div>
-          <p class="level3__detail-desc"></p>
-          <div class="level3__detail-stat">
-            <span>Prevalence</span><strong class="level3__detail-prev"></strong>
-          </div>
-          <div class="level3__detail-stat">
-            <span>95% CI</span><span class="level3__detail-ci"></span>
-          </div>
-          <div class="level3__detail-hint">Click any bubble above to explore</div>
         </div>
       </div>
     </div>
