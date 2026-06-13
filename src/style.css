@@ -640,9 +640,9 @@ body {
 
 .disp-panel {
   grid-area: 1 / 1;
-  display: grid;
-  grid-template-columns: 0.85fr 1fr;
-  gap: clamp(24px, 3vw, 56px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(48px, 7vw, 96px);
   opacity: 0;
   visibility: hidden;
   transform: translateY(8px);
@@ -657,11 +657,16 @@ body {
   pointer-events: auto;
 }
 
+.disp-card {
+  display: grid;
+  grid-template-columns: 0.85fr 1fr;
+  gap: clamp(24px, 3vw, 56px);
+}
+
 .disp-photo {
   background-size: cover;
   background-position: center;
-  border-radius: 12px;
-  min-height: 420px;
+  min-height: 440px;
 }
 
 .disp-content {
@@ -685,7 +690,7 @@ body {
 .disp-stats {
   display: flex;
   gap: clamp(24px, 4vw, 56px);
-  margin-bottom: 36px;
+  margin-bottom: 40px;
 }
 
 .disp-stat {
@@ -708,13 +713,39 @@ body {
   color: var(--c-text-muted);
 }
 
-/* Bar chart */
+/* Bar chart with y-axis + reference gridlines */
 .disp-chart {
+  margin-bottom: 18px;
+}
+
+.disp-plot {
+  position: relative;
+  height: 240px;
+  padding-left: 36px;
+}
+
+.disp-grid {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.disp-grid-label {
+  position: absolute;
+  left: 0;
+  top: -7px;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.disp-bars {
+  position: absolute;
+  inset: 0 0 0 36px;
   display: flex;
   align-items: flex-end;
-  gap: clamp(8px, 2vw, 24px);
-  height: 264px;
-  margin-bottom: 20px;
+  gap: clamp(6px, 1.5vw, 18px);
 }
 
 .disp-bar-col {
@@ -722,40 +753,68 @@ body {
   height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: flex-end;
-  gap: 8px;
+}
+
+.disp-bar-wrap {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
 }
 
 .disp-bar-val {
-  font-size: 11px;
+  position: absolute;
+  bottom: var(--bar-h);
+  margin-bottom: 4px;
+  font-size: 10px;
   color: var(--c-text-muted);
+  white-space: nowrap;
 }
 
 .disp-bar {
-  width: min(60%, 48px);
+  width: min(70%, 46px);
   height: 0;
   border-radius: 3px 3px 0 0;
   background: rgba(255, 255, 255, 0.16);
   transition: height 0.75s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* per-region pattern on the focal bar */
 .disp-bar--focus {
-  /* region colour + diagonal stripe pattern */
   background-color: var(--bar-color);
-  background-image: repeating-linear-gradient(
-    45deg,
-    rgba(0, 0, 0, 0.22) 0 5px,
-    rgba(0, 0, 0, 0) 5px 10px
-  );
+}
+.disp-bar--AFR.disp-bar--focus {
+  background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.28) 0 5px, transparent 5px 10px);
+}
+.disp-bar--AMR.disp-bar--focus {
+  background-image: radial-gradient(rgba(0,0,0,0.32) 1.6px, transparent 1.7px);
+  background-size: 9px 9px;
+}
+.disp-bar--SEAR.disp-bar--focus {
+  background-image: repeating-linear-gradient(0deg, rgba(0,0,0,0.26) 0 4px, transparent 4px 9px);
+}
+.disp-bar--WPR.disp-bar--focus {
+  background-image:
+    repeating-linear-gradient(0deg, rgba(0,0,0,0.22) 0 6px, transparent 6px 12px),
+    repeating-linear-gradient(90deg, rgba(0,0,0,0.22) 0 6px, transparent 6px 12px);
+}
+.disp-bar--EMR.disp-bar--focus {
+  background-image: repeating-linear-gradient(-45deg, rgba(0,0,0,0.28) 0 5px, transparent 5px 10px);
+}
+.disp-bar--EUR.disp-bar--focus {
+  background-image: radial-gradient(rgba(0,0,0,0.3) 1.6px, transparent 1.7px);
+  background-size: 9px 9px;
 }
 
 .disp-bar-name {
+  margin-top: 10px;
   font-size: 11px;
   color: var(--c-text-muted);
   text-align: center;
   line-height: 1.2;
-  height: 26px;
+  min-height: 26px;
 }
 
 .disp-note {
@@ -766,7 +825,7 @@ body {
 }
 
 @media (max-width: 860px) {
-  .disp-panel {
+  .disp-card {
     grid-template-columns: 1fr;
   }
   .disp-photo {
