@@ -256,14 +256,19 @@ function wireBubbleHover(section) {
     active = null;
   };
 
+  // The whole cell is the hover hit-area (small bubbles are otherwise hard to
+  // hover); the glow/tooltip still apply to the bubble inside.
   matrix.addEventListener("mouseover", (e) => {
-    const b = e.target.closest(".l2-bubble");
+    const cell = e.target.closest(".l2-cell");
+    if (!cell || cell.classList.contains("l2-cell--label")) return;
+    const b = cell.querySelector(".l2-bubble");
     if (b) show(b);
   });
   matrix.addEventListener("mousemove", move);
   matrix.addEventListener("mouseout", (e) => {
-    // leaving a bubble for something that isn't the same bubble
+    if (!active) return;
     const to = e.relatedTarget;
-    if (active && (!to || !active.contains(to))) clear();
+    const cell = active.closest(".l2-cell");
+    if (!to || !cell.contains(to)) clear();
   });
 }

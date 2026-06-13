@@ -284,9 +284,9 @@ body {
   transition: opacity 250ms ease, box-shadow 250ms ease;
 }
 
-/* Only bubbles are hover targets — empty cell area and the ring pass through. */
+/* The whole cell is the hover hit-area so small bubbles are easy to target. */
 .l2-cell {
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 /* Hovering one bubble dims the other colour fills (rings/lines unaffected). */
