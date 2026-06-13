@@ -262,17 +262,17 @@ function wireTabs(section) {
   const barVals = [...section.querySelectorAll(".disp-bar-val")];
   let current = -1;
 
-  const growBars = (card, stagger) => {
-    REGION_ORDER.forEach((rg, i) => {
-      const hPct = Math.min((card.bars[rg] / card.axisMax) * 100, 100);
-      bars[i].style.transitionDelay = "0ms";
-      bars[i].style.height = "0%";
-      requestAnimationFrame(() => {
-        bars[i].style.transitionDelay =
-          stagger && !reduceMotion() ? `${i * 55}ms` : "0ms";
-        bars[i].style.height = `${hPct}%`;
-      });
+  // Fix the paragraph height to the tallest card so the chart never shifts.
+  const equalizeParagraph = () => {
+    const prev = paragraphEl.textContent;
+    paragraphEl.style.minHeight = "0px";
+    let maxH = 0;
+    TABS.forEach((t) => {
+      paragraphEl.textContent = t.cards[0].paragraph;
+      maxH = Math.max(maxH, paragraphEl.offsetHeight);
     });
+    paragraphEl.textContent = prev;
+    paragraphEl.style.minHeight = `${maxH}px`;
   };
 
   const update = (index) => {
@@ -312,26 +312,24 @@ function wireTabs(section) {
         : NON_FOCUS_GRAY;
       barVals[i].textContent = card.bars[rg].toFixed(2) + "%";
       barVals[i].classList.toggle("is-focus", isFocus);
+      // Tween directly from the current height to the new one.
+      bars[i].style.height =
+        Math.min((card.bars[rg] / card.axisMax) * 100, 100) + "%";
     });
-    growBars(card, true);
   };
 
   tabs.forEach((t) =>
     t.addEventListener("click", () => update(Number(t.dataset.index)))
   );
 
-  update(0);
-
-  const io = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) {
-          growBars(TABS[current].cards[0], true);
-          io.disconnect();
-        }
-      });
-    },
-    { threshold: 0.15 }
-  );
-  io.observe(section);
+  // Measure once layout is ready (after the section is in the DOM), then paint.
+  requestAnimationFrame(() => {
+    equalizeParagraph();
+    update(0);
+  });
+  let resizeTimer;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(equalizeParagraph, 150);
+  });
 }

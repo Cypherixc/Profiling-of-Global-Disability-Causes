@@ -759,8 +759,9 @@ body {
 
 .disp-bar {
   width: min(72%, 48px);
-  height: var(--bar-h);
+  height: 0;
   background-repeat: repeat;
+  transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   /* no border radius — square-topped bars sitting on the X axis */
 }
 
