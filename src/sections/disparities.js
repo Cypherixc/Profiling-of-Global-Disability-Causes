@@ -118,13 +118,15 @@ const TABS = [
 ];
 
 // Per-region bar pattern (SVG tile, semi-transparent dark motif over the fill).
+// Tiles are ~50% of the original size (denser). Europe is staggered short
+// dashes; Western Pacific has a taller wave amplitude.
 const PATTERNS = {
-  AFR: [14, 14, `<path d="M4 4 L10 10 M10 4 L4 10" stroke="black" stroke-opacity="0.4" stroke-width="1.2"/>`], // cross
-  AMR: [14, 14, `<path d="M4 5 L10 5 L7 10 Z" fill="black" fill-opacity="0.4"/>`], // inverted triangle
-  EMR: [12, 12, `<circle cx="6" cy="6" r="1.7" fill="black" fill-opacity="0.42"/>`], // dots
-  EUR: [8, 8, `<path d="M4 0 V8" stroke="black" stroke-opacity="0.4" stroke-width="1.4"/>`], // vertical
-  SEAR: [10, 10, `<path d="M0 10 L10 0" stroke="black" stroke-opacity="0.4" stroke-width="1.4"/>`], // diagonal
-  WPR: [22, 9, `<path d="M0 4.5 Q5.5 0 11 4.5 T22 4.5" stroke="black" stroke-opacity="0.4" stroke-width="1.3" fill="none"/>`], // wavy
+  AFR: [7, 7, `<path d="M2 2 L5 5 M5 2 L2 5" stroke="black" stroke-opacity="0.4" stroke-width="0.8"/>`], // cross
+  AMR: [7, 7, `<path d="M2 2.5 L5 2.5 L3.5 5 Z" fill="black" fill-opacity="0.4"/>`], // inverted triangle
+  EMR: [6, 6, `<circle cx="3" cy="3" r="0.9" fill="black" fill-opacity="0.42"/>`], // dots
+  EUR: [7, 9, `<path d="M2 1 V4 M5 5.5 V8.5" stroke="black" stroke-opacity="0.4" stroke-width="1"/>`], // staggered short dashes
+  SEAR: [5, 5, `<path d="M0 5 L5 0" stroke="black" stroke-opacity="0.4" stroke-width="0.8"/>`], // diagonal
+  WPR: [11, 9, `<path d="M0 4.5 Q2.75 0 5.5 4.5 T11 4.5" stroke="black" stroke-opacity="0.4" stroke-width="1" fill="none"/>`], // wavy (taller amplitude)
 };
 
 function patternURI(rg) {
