@@ -641,6 +641,7 @@ body {
 }
 
 .disp-photo {
+  position: relative;
   background-size: cover;
   background-position: center;
   min-height: 440px;
@@ -649,6 +650,46 @@ body {
 
 .disp-photo.is-swapping {
   opacity: 0;
+}
+
+/* Alt-text chip — collapsed shows "Alt Text", expands on hover/focus. */
+.disp-alt {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  max-width: calc(100% - 28px);
+  background: rgba(18, 18, 18, 0.7);
+  backdrop-filter: blur(8px) saturate(1.2);
+  -webkit-backdrop-filter: blur(8px) saturate(1.2);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 13px;
+  line-height: 1.35;
+  padding: 7px 12px;
+  cursor: help;
+  outline: none;
+}
+
+.disp-alt__desc {
+  display: none;
+}
+
+.disp-alt:hover .disp-alt__label,
+.disp-alt:focus .disp-alt__label,
+.disp-alt:focus-within .disp-alt__label {
+  display: none;
+}
+
+.disp-alt:hover .disp-alt__desc,
+.disp-alt:focus .disp-alt__desc,
+.disp-alt:focus-within .disp-alt__desc {
+  display: inline;
+}
+
+.disp-alt:focus,
+.disp-alt:focus-within {
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.45);
 }
 
 .disp-content {

@@ -24,6 +24,16 @@ const REGION_COLOR = {
   WPR: "#63c1c2",
 };
 
+// Alt text for each region's photo (shown in the corner chip + as aria-label).
+const ALT = {
+  AFR: "A woman in a shawl and a girl in a pink headscarf stand in a clinic doorway.",
+  AMR: "A pregnant woman and a boy with glasses stand on a hillside above a sprawling city.",
+  EMR: "Two girls sit together against a worn wall.",
+  EUR: "An older woman and a younger woman embrace, both smiling.",
+  SEAR: "A farmer in a conical hat walks along a flooded rice paddy.",
+  WPR: "A smiling boy holds a basketball in a narrow alley.",
+};
+
 const note = (cause) =>
   `Note: This bar chart illustrates the percentage of individuals with disabilities caused by ${cause} among the global population with disabilities across all six WHO regions.`;
 
@@ -194,7 +204,12 @@ export function renderDisparities() {
       <div class="disp-tabs" role="tablist">${tabs}</div>
 
       <div class="disp-card">
-        <div class="disp-photo"></div>
+        <div class="disp-photo">
+          <div class="disp-alt" tabindex="0" role="note">
+            <span class="disp-alt__label">Alt Text</span>
+            <span class="disp-alt__desc"></span>
+          </div>
+        </div>
         <div class="disp-content">
           <h3 class="disp-condition"></h3>
           <p class="disp-paragraph"></p>
@@ -260,6 +275,8 @@ function wireTabs(section) {
   const statLabels = [...section.querySelectorAll(".disp-stat-label")];
   const bars = [...section.querySelectorAll(".disp-bar")];
   const barVals = [...section.querySelectorAll(".disp-bar-val")];
+  const altChip = section.querySelector(".disp-alt");
+  const altDesc = section.querySelector(".disp-alt__desc");
   let current = -1;
 
   // Fix the paragraph height to the tallest card so the chart never shifts.
@@ -293,6 +310,10 @@ function wireTabs(section) {
         photo.classList.remove("is-swapping");
       }, 200);
     }
+
+    const alt = ALT[focus] || card.condition;
+    altDesc.textContent = alt;
+    altChip.setAttribute("aria-label", `Image description: ${alt}`);
 
     conditionEl.textContent = card.condition;
     paragraphEl.textContent = card.paragraph;
