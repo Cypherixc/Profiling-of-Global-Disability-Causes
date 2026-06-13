@@ -602,6 +602,274 @@ body {
   }
 }
 
+/* ---------- Disparities (tabbed region cards) ---------- */
+.disp-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: clamp(28px, 4vw, 48px) 0 clamp(24px, 3vw, 40px);
+}
+
+.disp-tab {
+  appearance: none;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  color: var(--c-text-muted);
+  font: inherit;
+  font-size: 15px;
+  padding: 9px 20px;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.disp-tab:hover {
+  color: var(--c-text);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.disp-tab.is-active {
+  color: #fff;
+  border-color: var(--tab-color);
+  background: color-mix(in srgb, var(--tab-color) 22%, transparent);
+}
+
+.disp-card {
+  display: grid;
+  grid-template-columns: 0.85fr 1fr;
+  gap: clamp(24px, 3vw, 56px);
+}
+
+.disp-photo {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  min-height: 440px;
+  transition: opacity 0.25s ease;
+}
+
+.disp-photo.is-swapping {
+  opacity: 0;
+}
+
+/* Alt-text chip — collapsed shows "Alt Text", expands on hover/focus. */
+.disp-alt {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  display: inline-flex;
+  align-items: center;
+  max-width: calc(100% - 28px);
+  background: rgba(18, 18, 18, 0.7);
+  backdrop-filter: blur(8px) saturate(1.2);
+  -webkit-backdrop-filter: blur(8px) saturate(1.2);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 13px;
+  line-height: 1.35;
+  padding: 7px 12px;
+  cursor: help;
+  outline: none;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* Collapsed shows the label; on hover/focus the label collapses away and the
+   description wipes open — both width and opacity transition. */
+.disp-alt__label,
+.disp-alt__desc {
+  display: inline-block;
+  overflow: hidden;
+  /* simple crossfade — width snaps, text fades (no horizontal wipe) */
+  transition: opacity 0.25s ease;
+}
+
+.disp-alt__label {
+  max-width: 120px;
+  opacity: 1;
+}
+
+.disp-alt__desc {
+  max-width: 0;
+  opacity: 0;
+}
+
+.disp-alt:hover .disp-alt__label,
+.disp-alt:focus-within .disp-alt__label {
+  max-width: 0;
+  opacity: 0;
+}
+
+.disp-alt:hover .disp-alt__desc,
+.disp-alt:focus-within .disp-alt__desc {
+  max-width: min(88vw, 460px);
+  opacity: 1;
+}
+
+.disp-alt:focus,
+.disp-alt:focus-within {
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.45);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .disp-alt__label,
+  .disp-alt__desc {
+    transition: opacity 0.2s ease;
+  }
+}
+
+.disp-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.disp-condition {
+  margin: 0 0 16px;
+  font-size: clamp(18px, 1.9vw, 22px);
+  font-weight: 700;
+}
+
+.disp-paragraph {
+  margin: 0 0 28px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--c-text-muted);
+}
+
+.disp-stats {
+  display: flex;
+  gap: clamp(24px, 4vw, 56px);
+  margin-bottom: 40px;
+}
+
+.disp-stat {
+  flex: 1;
+  max-width: 320px;
+}
+
+.disp-stat-value {
+  font-family: "Helvetica Neue", Arial, "Satoshi", sans-serif;
+  font-size: clamp(26px, 3vw, 34px);
+  font-weight: 500;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.disp-stat-label {
+  margin-top: 12px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--c-text-muted);
+}
+
+/* Bar chart with white axes + dashed reference line */
+.disp-chart {
+  margin-bottom: 18px;
+}
+
+.disp-plot {
+  position: relative;
+  height: 240px;
+  margin-left: 42px;
+  border-left: 1.5px solid #fff;   /* Y axis */
+  border-bottom: 1.5px solid #fff; /* X axis */
+}
+
+.disp-axis-label {
+  position: absolute;
+  left: -38px;
+  width: 34px;
+  text-align: right;
+  font-size: 10px;
+  color: #fff;
+}
+.disp-axis-label--max { top: -6px; }
+.disp-axis-label--zero { bottom: -6px; }
+
+/* dashed reference line at the top of the scale, behind the bars */
+.disp-ref {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  border-top: 1px dashed rgba(255, 255, 255, 0.45);
+  z-index: 0;
+}
+
+.disp-bars {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(6px, 1.5vw, 18px);
+  z-index: 1;
+}
+
+.disp-bar-col {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.disp-bar-val {
+  font-size: 11px;
+  color: var(--c-text-muted);
+  margin-bottom: 5px;
+  white-space: nowrap;
+}
+.disp-bar-val.is-focus {
+  color: #fff;
+}
+
+.disp-bar {
+  width: min(72%, 48px);
+  height: 0;
+  background-repeat: repeat;
+  transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  /* no border radius — square-topped bars sitting on the X axis */
+}
+
+.disp-xlabels {
+  display: flex;
+  gap: clamp(6px, 1.5vw, 18px);
+  margin: 10px 0 0 42px;
+}
+
+.disp-xlabel {
+  flex: 1;
+  text-align: center;
+  font-size: 11px;
+  line-height: 1.2;
+  color: var(--c-text-muted);
+}
+
+.disp-note {
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.4);
+  margin: 0;
+}
+
+@media (max-width: 860px) {
+  .disp-card {
+    grid-template-columns: 1fr;
+  }
+  .disp-photo {
+    min-height: 260px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .disp-panel,
+  .disp-bar {
+    transition: none;
+  }
+}
+
 /* ---------- Hero ---------- */
 .hero {
   position: relative;
