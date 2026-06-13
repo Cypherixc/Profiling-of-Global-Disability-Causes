@@ -100,7 +100,7 @@ export function renderLevel3Top5() {
                   <text x="150" y="${150 - r - 5}" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.5)">${v * 100}%</text>`;
               }).join("")}
             </svg>
-            <div class="level3__particles" aria-hidden="true"></div>
+            <div class="level3__halo" aria-hidden="true"></div>
           </div>
 
           <div class="level3__detail-info">
@@ -139,27 +139,27 @@ export function renderLevel3Top5() {
 
 function wireDetail(section) {
   const bubble = section.querySelector(".level3__focus-bubble");
-  const particles = section.querySelector(".level3__particles");
+  const halo = section.querySelector(".level3__halo");
   const causeEl = section.querySelector(".level3__detail-cause");
   const regionEl = section.querySelector(".level3__detail-region");
   const descEl = section.querySelector(".level3__detail-desc");
   const prevEl = section.querySelector(".level3__detail-prev");
   const ciEl = section.querySelector(".level3__detail-ci");
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let currentColor = null;
 
-  const burst = (color) => {
+  // Brief halo pulse that expands, fades, and morphs from the current
+  // region colour to the newly selected one.
+  const pulse = (fromColor, toColor) => {
     if (reduce) return;
-    for (let i = 0; i < 14; i++) {
-      const p = document.createElement("span");
-      const angle = (Math.PI * 2 * i) / 14 + Math.random() * 0.4;
-      const dist = 60 + Math.random() * 50;
-      p.className = "level3__particle";
-      p.style.setProperty("--dx", `${Math.cos(angle) * dist}px`);
-      p.style.setProperty("--dy", `${Math.sin(angle) * dist}px`);
-      p.style.background = color;
-      particles.appendChild(p);
-      p.addEventListener("animationend", () => p.remove());
-    }
+    halo.animate(
+      [
+        { offset: 0, opacity: 0, transform: "translate(-50%, -50%) scale(0.7)", "--halo-color": fromColor || toColor },
+        { offset: 0.4, opacity: 0.55, "--halo-color": toColor },
+        { offset: 1, opacity: 0, transform: "translate(-50%, -50%) scale(1.3)", "--halo-color": toColor },
+      ],
+      { duration: 650, easing: "ease-out" }
+    );
   };
 
   const select = (el) => {
@@ -176,7 +176,8 @@ function wireDetail(section) {
     descEl.textContent = info.desc;
     prevEl.textContent = pctText(+mean);
     ciEl.textContent = lower && upper ? `${pctText(+lower)}–${pctText(+upper)}` : "—";
-    burst(color);
+    pulse(currentColor, color);
+    currentColor = color;
   };
 
   section.querySelector(".level3__matrix").addEventListener("click", (e) => {

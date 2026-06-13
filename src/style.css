@@ -516,28 +516,24 @@ body {
   transition: r 0.6s cubic-bezier(0.16, 1, 0.3, 1), fill 0.45s ease;
 }
 
-.level3__particles {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
+@property --halo-color {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
 }
 
-.level3__particle {
+.level3__halo {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 6px;
-  height: 6px;
+  width: 280px;
+  height: 280px;
+  max-width: 92%;
   border-radius: 50%;
-  opacity: 0.9;
-  animation: l3-particle 0.7s ease-out forwards;
-}
-
-@keyframes l3-particle {
-  to {
-    transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy)));
-    opacity: 0;
-  }
+  transform: translate(-50%, -50%) scale(0.7);
+  background: radial-gradient(circle, var(--halo-color) 0%, transparent 65%);
+  opacity: 0;
+  pointer-events: none;
 }
 
 .level3__detail-info {
