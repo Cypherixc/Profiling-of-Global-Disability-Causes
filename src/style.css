@@ -491,9 +491,141 @@ body {
   opacity: 0.2;
 }
 
+.l3-bubble.is-selected {
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9);
+}
+
+/* ---------- Level 3 detail / focus view ---------- */
+.level3__detail {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: clamp(32px, 5vw, 72px);
+  align-items: center;
+  margin-top: clamp(48px, 7vw, 96px);
+  padding-top: clamp(40px, 6vw, 72px);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.level3__focus {
+  position: relative;
+  justify-self: center;
+}
+
+.level3__focus-svg {
+  display: block;
+  width: 340px;
+  max-width: 100%;
+  height: auto;
+}
+
+.level3__focus-bubble {
+  transition: r 0.6s cubic-bezier(0.16, 1, 0.3, 1), fill 0.45s ease;
+}
+
+.level3__particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.level3__particle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  opacity: 0.9;
+  animation: l3-particle 0.7s ease-out forwards;
+}
+
+@keyframes l3-particle {
+  to {
+    transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy)));
+    opacity: 0;
+  }
+}
+
+.level3__detail-icon {
+  width: 56px;
+  height: 56px;
+  margin-bottom: 16px;
+}
+
+.level3__detail-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.level3__detail-rank {
+  font-size: 13px;
+  color: var(--c-text-muted);
+  margin-bottom: 6px;
+}
+
+.level3__detail-cause {
+  margin: 0 0 10px;
+  font-size: clamp(22px, 2.6vw, 30px);
+  font-weight: 700;
+  color: var(--c-text);
+}
+
+.level3__detail-region {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--c-text-muted);
+  margin-bottom: 18px;
+}
+
+.level3__detail-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.level3__detail-desc {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--c-text-muted);
+  max-width: 52ch;
+  margin: 0 0 20px;
+}
+
+.level3__detail-stat {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  max-width: 320px;
+  padding: 8px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 14px;
+}
+
+.level3__detail-stat span {
+  color: var(--c-text-muted);
+}
+
+.level3__detail-prev {
+  font-size: 16px;
+}
+
+.level3__detail-hint {
+  margin-top: 18px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
 @media (max-width: 900px) {
-  .level3__body {
+  .level3__body,
+  .level3__detail {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .level3__focus-bubble {
+    transition: none;
   }
 }
 

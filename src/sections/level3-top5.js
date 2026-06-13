@@ -8,6 +8,12 @@
 // which differs from a manual ordering slip in the original Figma.
 
 import data from "../data/disability.json";
+import { conditionInfo } from "../data/conditions.js";
+
+// Detail view ("focus") scale — larger than the grid, calibrated to 4%.
+const DET_MAXR = 120;
+const detRadius = (v) => Math.sqrt(Math.max(v, 0) / 0.04) * DET_MAXR;
+const DET_RINGS = [0.01, 0.02, 0.03, 0.04];
 
 const REGIONS = [
   { key: "AFR", name: "Africa", color: "#4690cd" },
@@ -129,12 +135,100 @@ export function renderLevel3Top5() {
           </div>
         </div>
       </div>
+
+      <div class="level3__detail">
+        <div class="level3__focus">
+          <svg class="level3__focus-svg" viewBox="0 0 300 300" aria-hidden="true">
+            <!-- filled bubble first, reference rings drawn on top so they stay visible -->
+            <circle class="level3__focus-bubble" cx="150" cy="150" r="0" fill="#4690cd" />
+            ${DET_RINGS.map((v) => {
+              const r = detRadius(v);
+              return `<circle cx="150" cy="150" r="${r}" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
+                <text x="150" y="${150 - r - 5}" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.5)">${v * 100}%</text>`;
+            }).join("")}
+          </svg>
+          <div class="level3__particles" aria-hidden="true"></div>
+        </div>
+
+        <div class="level3__detail-info">
+          <div class="level3__detail-icon"></div>
+          <div class="level3__detail-rank"></div>
+          <h3 class="level3__detail-cause"></h3>
+          <div class="level3__detail-region"></div>
+          <p class="level3__detail-desc"></p>
+          <div class="level3__detail-stat">
+            <span>Prevalence</span><strong class="level3__detail-prev"></strong>
+          </div>
+          <div class="level3__detail-stat">
+            <span>95% CI</span><span class="level3__detail-ci"></span>
+          </div>
+          <div class="level3__detail-hint">Click any bubble above to explore</div>
+        </div>
+      </div>
     </div>
     <div class="l2-tooltip" role="status" aria-live="polite" hidden></div>
   `;
 
   wireBubbleHover(section);
+  wireDetail(section);
   return section;
+}
+
+function wireDetail(section) {
+  const bubble = section.querySelector(".level3__focus-bubble");
+  const particles = section.querySelector(".level3__particles");
+  const iconEl = section.querySelector(".level3__detail-icon");
+  const rankEl = section.querySelector(".level3__detail-rank");
+  const causeEl = section.querySelector(".level3__detail-cause");
+  const regionEl = section.querySelector(".level3__detail-region");
+  const descEl = section.querySelector(".level3__detail-desc");
+  const prevEl = section.querySelector(".level3__detail-prev");
+  const ciEl = section.querySelector(".level3__detail-ci");
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const burst = (color) => {
+    if (reduce) return;
+    for (let i = 0; i < 14; i++) {
+      const p = document.createElement("span");
+      const angle = (Math.PI * 2 * i) / 14 + Math.random() * 0.4;
+      const dist = 60 + Math.random() * 50;
+      p.className = "level3__particle";
+      p.style.setProperty("--dx", `${Math.cos(angle) * dist}px`);
+      p.style.setProperty("--dy", `${Math.sin(angle) * dist}px`);
+      p.style.background = color;
+      particles.appendChild(p);
+      p.addEventListener("animationend", () => p.remove());
+    }
+  };
+
+  const select = (el) => {
+    const { cause, region, color, mean, lower, upper, rank } = el.dataset;
+    section.querySelectorAll(".l3-bubble.is-selected").forEach((b) => b.classList.remove("is-selected"));
+    el.classList.add("is-selected");
+
+    bubble.setAttribute("r", detRadius(+mean).toFixed(1));
+    bubble.setAttribute("fill", color);
+
+    const info = conditionInfo(cause);
+    iconEl.innerHTML = info.icon;
+    iconEl.style.color = color;
+    rankEl.textContent = `#${rank} in ${region}`;
+    causeEl.textContent = cause;
+    regionEl.innerHTML = `<span class="level3__detail-dot" style="background:${color}"></span>${region}`;
+    descEl.textContent = info.desc;
+    prevEl.textContent = pctText(+mean);
+    ciEl.textContent = lower && upper ? `${pctText(+lower)}–${pctText(+upper)}` : "—";
+    burst(color);
+  };
+
+  section.querySelector(".level3__matrix").addEventListener("click", (e) => {
+    const b = e.target.closest(".l3-bubble");
+    if (b) select(b);
+  });
+
+  // Default selection: the global maximum (Europe — Low back pain).
+  const def = section.querySelector('.l3-bubble[data-region="Europe"][data-rank="1"]');
+  if (def) select(def);
 }
 
 function wireBubbleHover(section) {
