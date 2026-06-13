@@ -85,6 +85,8 @@ const pctText = (v) => (v == null ? "—" : (v * 100).toFixed(2) + "%");
 function bubbleCell({ cause, regionName, rec, color, rank, edge, z }) {
   const value = rec?.mean || 0;
   const d = diameter(value);
+  // Hover hit-area: ~half the reference ring, but never smaller than the bubble.
+  const hit = Math.max(REF_3PCT * 0.5, d);
   const edgeClass = edge ? ` l2-cell--${edge}` : "";
   const dataAttrs =
     `data-cause="${cause}" data-region="${regionName}" data-color="${color}" ` +
@@ -95,6 +97,7 @@ function bubbleCell({ cause, regionName, rec, color, rank, edge, z }) {
       ${rank ? `<span class="l2-rank" style="color:${color}">${rank}</span>` : ""}
       <span class="l2-ring" style="width:${REF_3PCT}px;height:${REF_3PCT}px"></span>
       <span class="l2-bubble" ${dataAttrs} style="width:${d}px;height:${d}px;background:${color}"></span>
+      <span class="l2-hit" style="width:${hit}px;height:${hit}px"></span>
     </div>
   `;
 }
@@ -256,14 +259,19 @@ function wireBubbleHover(section) {
     active = null;
   };
 
+  // The whole cell is the hover hit-area (small bubbles are otherwise hard to
+  // hover); the glow/tooltip still apply to the bubble inside.
   matrix.addEventListener("mouseover", (e) => {
-    const b = e.target.closest(".l2-bubble");
+    const cell = e.target.closest(".l2-cell");
+    if (!cell || cell.classList.contains("l2-cell--label")) return;
+    const b = cell.querySelector(".l2-bubble");
     if (b) show(b);
   });
   matrix.addEventListener("mousemove", move);
   matrix.addEventListener("mouseout", (e) => {
-    // leaving a bubble for something that isn't the same bubble
+    if (!active) return;
     const to = e.relatedTarget;
-    if (active && (!to || !active.contains(to))) clear();
+    const cell = active.closest(".l2-cell");
+    if (!to || !cell.contains(to)) clear();
   });
 }
