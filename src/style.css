@@ -703,7 +703,7 @@ body {
 
 .disp-alt:hover .disp-alt__desc,
 .disp-alt:focus-within .disp-alt__desc {
-  max-width: min(78vw, 380px);
+  max-width: min(88vw, 460px);
   opacity: 1;
 }
 

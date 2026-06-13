@@ -26,12 +26,12 @@ const REGION_COLOR = {
 
 // Alt text for each region's photo (shown in the corner chip + as aria-label).
 const ALT = {
-  AFR: "A woman in a shawl and a girl in a pink headscarf stand in a clinic doorway.",
-  AMR: "A pregnant woman and a boy with glasses stand on a hillside above a sprawling city.",
+  AFR: "A woman and a girl wait at a clinic doorway.",
+  AMR: "A pregnant woman and a boy above a hillside city.",
   EMR: "Two girls sit together against a worn wall.",
-  EUR: "An older woman and a younger woman embrace, both smiling.",
-  SEAR: "A farmer in a conical hat walks along a flooded rice paddy.",
-  WPR: "A smiling boy holds a basketball in a narrow alley.",
+  EUR: "An older woman and a younger woman embrace.",
+  SEAR: "A farmer in a conical hat crosses a rice paddy.",
+  WPR: "A smiling boy holds a basketball in an alley.",
 };
 
 const note = (cause) =>
