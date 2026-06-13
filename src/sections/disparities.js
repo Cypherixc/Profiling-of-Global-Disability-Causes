@@ -160,59 +160,17 @@ function patternURI(rg) {
 
 const NON_FOCUS_GRAY = "#8d9096";
 
-function barChart(card, focusRegion) {
-  const { axisMax } = card;
+// ---------- Persistent frame: build once, animate content on tab change ----------
 
-  const bars = REGION_ORDER.map((rg) => {
-    const v = card.bars[rg];
-    const hPct = Math.min((v / axisMax) * 100, 100);
-    const isFocus = rg === focusRegion;
-    const color = isFocus ? REGION_COLOR[rg] : NON_FOCUS_GRAY;
-    return `
+function renderBars() {
+  // Six fixed columns. Pattern is fixed per region; colour/height/value update.
+  return REGION_ORDER.map(
+    (rg) => `
       <div class="disp-bar-col">
-        <span class="disp-bar-val${isFocus ? " is-focus" : ""}">${v.toFixed(2)}%</span>
-        <div class="disp-bar" style="--bar-h:${hPct}%; background-color:${color}; background-image:${patternURI(rg)}"></div>
-      </div>`;
-  }).join("");
-
-  const names = REGION_ORDER.map(
-    (rg) => `<span class="disp-xlabel">${REGION_LABEL[rg]}</span>`
+        <span class="disp-bar-val" data-region="${rg}"></span>
+        <div class="disp-bar" data-region="${rg}" style="background-image:${patternURI(rg)}"></div>
+      </div>`
   ).join("");
-
-  return `
-    <div class="disp-chart">
-      <div class="disp-plot">
-        <span class="disp-axis-label disp-axis-label--max">${axisMax.toFixed(1)}%</span>
-        <span class="disp-axis-label disp-axis-label--zero">0.0%</span>
-        <div class="disp-ref"></div>
-        <div class="disp-bars">${bars}</div>
-      </div>
-      <div class="disp-xlabels">${names}</div>
-    </div>`;
-}
-
-function cardEl(card, focusRegion) {
-  return `
-    <article class="disp-card">
-      <div class="disp-photo" style="background-image:url('${card.image}')" role="img" aria-label="${card.condition}"></div>
-      <div class="disp-content">
-        <h3 class="disp-condition">${card.condition}</h3>
-        <p class="disp-paragraph">${card.paragraph}</p>
-        <div class="disp-stats">
-          ${card.stats
-            .map(
-              (s) => `
-            <div class="disp-stat">
-              <div class="disp-stat-value">${s.value}</div>
-              <div class="disp-stat-label">${s.label}</div>
-            </div>`
-            )
-            .join("")}
-        </div>
-        ${barChart(card, focusRegion)}
-        <p class="disp-note">${card.note}</p>
-      </div>
-    </article>`;
 }
 
 export function renderDisparities() {
@@ -225,11 +183,8 @@ export function renderDisparities() {
         style="--tab-color:${REGION_COLOR[t.region]}">${REGION_LABEL[t.region]}</button>`
   ).join("");
 
-  const panels = TABS.map(
-    (t, i) => `
-    <div class="disp-panel${i === 0 ? " is-active" : ""}" data-index="${i}">
-      ${t.cards.map((c) => cardEl(c, t.region)).join("")}
-    </div>`
+  const xlabels = REGION_ORDER.map(
+    (rg) => `<span class="disp-xlabel">${REGION_LABEL[rg]}</span>`
   ).join("");
 
   section.innerHTML = `
@@ -237,7 +192,28 @@ export function renderDisparities() {
       <h2 class="section__title">Disparities in the Prevalence of Causes of Disability by WHO Regions</h2>
       <div class="section__rule"></div>
       <div class="disp-tabs" role="tablist">${tabs}</div>
-      <div class="disp-stage">${panels}</div>
+
+      <div class="disp-card">
+        <div class="disp-photo"></div>
+        <div class="disp-content">
+          <h3 class="disp-condition"></h3>
+          <p class="disp-paragraph"></p>
+          <div class="disp-stats">
+            <div class="disp-stat"><div class="disp-stat-value"></div><div class="disp-stat-label"></div></div>
+            <div class="disp-stat"><div class="disp-stat-value"></div><div class="disp-stat-label"></div></div>
+          </div>
+          <div class="disp-chart">
+            <div class="disp-plot">
+              <span class="disp-axis-label disp-axis-label--max"></span>
+              <span class="disp-axis-label disp-axis-label--zero">0.0%</span>
+              <div class="disp-ref"></div>
+              <div class="disp-bars">${renderBars()}</div>
+            </div>
+            <div class="disp-xlabels">${xlabels}</div>
+          </div>
+          <p class="disp-note"></p>
+        </div>
+      </div>
     </div>
   `;
 
@@ -245,39 +221,112 @@ export function renderDisparities() {
   return section;
 }
 
-function growBars(panel) {
-  panel.querySelectorAll(".disp-bar").forEach((bar, i) => {
-    bar.style.height = "0%";
-    requestAnimationFrame(() => {
-      bar.style.transitionDelay = `${(i % 6) * 55}ms`;
-      bar.style.height = "var(--bar-h)";
-    });
-  });
+const reduceMotion = () =>
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function parseStat(s) {
+  const m = String(s).match(/^([\d.]+)(.*)$/);
+  if (!m) return { num: 0, decimals: 0, suffix: String(s) };
+  const decimals = (m[1].split(".")[1] || "").length;
+  return { num: parseFloat(m[1]), decimals, suffix: m[2] };
+}
+
+function countUp(el, value) {
+  const { num, decimals, suffix } = parseStat(value);
+  if (reduceMotion()) {
+    el.textContent = num.toFixed(decimals) + suffix;
+    return;
+  }
+  const dur = 650;
+  const start = performance.now();
+  const tick = (now) => {
+    const t = Math.min((now - start) / dur, 1);
+    const eased = 1 - Math.pow(1 - t, 3);
+    el.textContent = (num * eased).toFixed(decimals) + suffix;
+    if (t < 1) requestAnimationFrame(tick);
+    else el.textContent = num.toFixed(decimals) + suffix;
+  };
+  requestAnimationFrame(tick);
 }
 
 function wireTabs(section) {
   const tabs = [...section.querySelectorAll(".disp-tab")];
-  const panels = [...section.querySelectorAll(".disp-panel")];
+  const photo = section.querySelector(".disp-photo");
+  const conditionEl = section.querySelector(".disp-condition");
+  const paragraphEl = section.querySelector(".disp-paragraph");
+  const noteEl = section.querySelector(".disp-note");
+  const maxLabel = section.querySelector(".disp-axis-label--max");
+  const statVals = [...section.querySelectorAll(".disp-stat-value")];
+  const statLabels = [...section.querySelectorAll(".disp-stat-label")];
+  const bars = [...section.querySelectorAll(".disp-bar")];
+  const barVals = [...section.querySelectorAll(".disp-bar-val")];
+  let current = -1;
 
-  const activate = (index) => {
-    tabs.forEach((t, i) => t.classList.toggle("is-active", i === index));
-    panels.forEach((p, i) => {
-      const on = i === index;
-      p.classList.toggle("is-active", on);
-      if (on) growBars(p);
+  const growBars = (card, stagger) => {
+    REGION_ORDER.forEach((rg, i) => {
+      const hPct = Math.min((card.bars[rg] / card.axisMax) * 100, 100);
+      bars[i].style.transitionDelay = "0ms";
+      bars[i].style.height = "0%";
+      requestAnimationFrame(() => {
+        bars[i].style.transitionDelay =
+          stagger && !reduceMotion() ? `${i * 55}ms` : "0ms";
+        bars[i].style.height = `${hPct}%`;
+      });
     });
   };
 
+  const update = (index) => {
+    if (index === current) return;
+    const first = current === -1;
+    current = index;
+    const card = TABS[index].cards[0];
+    const focus = TABS[index].region;
+
+    tabs.forEach((t, i) => t.classList.toggle("is-active", i === index));
+
+    if (first || reduceMotion()) {
+      photo.style.backgroundImage = `url('${card.image}')`;
+    } else {
+      photo.classList.add("is-swapping");
+      setTimeout(() => {
+        photo.style.backgroundImage = `url('${card.image}')`;
+        photo.classList.remove("is-swapping");
+      }, 200);
+    }
+
+    conditionEl.textContent = card.condition;
+    paragraphEl.textContent = card.paragraph;
+    noteEl.textContent = card.note;
+    maxLabel.textContent =
+      card.axisMax.toFixed(card.axisMax < 1 ? 2 : 1) + "%";
+
+    card.stats.forEach((s, i) => {
+      statLabels[i].textContent = s.label;
+      countUp(statVals[i], s.value);
+    });
+
+    REGION_ORDER.forEach((rg, i) => {
+      const isFocus = rg === focus;
+      bars[i].style.backgroundColor = isFocus
+        ? REGION_COLOR[rg]
+        : NON_FOCUS_GRAY;
+      barVals[i].textContent = card.bars[rg].toFixed(2) + "%";
+      barVals[i].classList.toggle("is-focus", isFocus);
+    });
+    growBars(card, true);
+  };
+
   tabs.forEach((t) =>
-    t.addEventListener("click", () => activate(Number(t.dataset.index)))
+    t.addEventListener("click", () => update(Number(t.dataset.index)))
   );
+
+  update(0);
 
   const io = new IntersectionObserver(
     (entries) => {
       entries.forEach((e) => {
         if (e.isIntersecting) {
-          const activeIdx = tabs.findIndex((t) => t.classList.contains("is-active"));
-          growBars(panels[activeIdx]);
+          growBars(TABS[current].cards[0], true);
           io.disconnect();
         }
       });
