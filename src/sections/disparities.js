@@ -101,17 +101,17 @@ const TABS = [
     region: "WPR",
     cards: [
       {
-        condition: "Cardiovascular Diseases",
+        condition: "Chronic Respiratory Diseases",
         image: "/assets/photos/western-pacific.jpg",
         paragraph:
-          "In the Western Pacific region, factors like an unhealthy diet, insufficient physical exercise, and lower socio-economic status in some areas contribute to a higher prevalence of disability caused by Cardiovascular Diseases. As a result, approximately 1.98% of the global disability population in this region is attributed to Cardiovascular Diseases. This proportion is roughly 143% higher than the average observed in the other five WHO regions.",
+          "In the Western Pacific region, high smoking rates, widespread air pollution, occupational dust exposure and a rapidly ageing population — with China bearing much of the burden — contribute to a high prevalence of disability caused by chronic respiratory diseases such as COPD. This accounts for approximately 0.82% of the global disability population, which is roughly 46% higher than the average observed in the other five WHO regions. (Source: Global Burden of Disease 2021)",
         stats: [
-          { value: "31.7%", label: "of individuals with disabilities caused by cardiovascular diseases globally" },
-          { value: "143%", label: higher },
+          { value: "30.8%", label: "of individuals with disabilities caused by chronic respiratory diseases globally" },
+          { value: "46%", label: higher },
         ],
-        axisMax: 2.0,
-        bars: { AFR: 0.46, AMR: 0.98, EMR: 0.34, EUR: 1.23, SEAR: 1.06, WPR: 1.98 },
-        note: note("cardiovascular diseases"),
+        axisMax: 1.0,
+        bars: { AFR: 0.27, AMR: 0.71, EMR: 0.4, EUR: 0.62, SEAR: 0.8, WPR: 0.82 },
+        note: note("chronic respiratory diseases"),
       },
     ],
   },
