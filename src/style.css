@@ -284,9 +284,21 @@ body {
   transition: opacity 250ms ease, box-shadow 250ms ease;
 }
 
-/* The whole cell is the hover hit-area so small bubbles are easy to target. */
+/* Hover hit-area is a centred transparent disc (~half the reference ring),
+   so small bubbles are easy to target without enlarging the visual bubble. */
 .l2-cell {
+  pointer-events: none;
+}
+
+.l2-hit {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  z-index: 3;
   pointer-events: auto;
+  cursor: pointer;
 }
 
 /* Hovering one bubble dims the other colour fills (rings/lines unaffected). */
