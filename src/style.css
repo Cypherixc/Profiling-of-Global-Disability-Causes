@@ -231,9 +231,9 @@ html {
   gap: 3px;
   padding: 8px 11px;
   border-radius: 8px;
-  background: rgba(var(--c-surface-rgb), 0.92);
-  backdrop-filter: blur(8px) saturate(1.2);
-  -webkit-backdrop-filter: blur(8px) saturate(1.2);
+  background: rgba(var(--c-surface-rgb), 0.6);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
   border: 1px solid rgba(var(--c-fg-rgb), 0.12);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
   font-size: 12px;
@@ -1251,15 +1251,13 @@ html {
 /* ---------- Hero ---------- */
 .hero {
   position: relative;
-  min-height: min(90vh, 800px);
+  /* the landing fills the screen; content is centred and the scroll cue is
+     pinned to the bottom (absolute), so the top/bottom stay balanced */
+  min-height: 90vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* tighter gap to the scroll cue */
-  gap: clamp(18px, 2.6vh, 34px);
-  /* top clears the fixed bar; bottom kept small so hero→By region ≈ 200 */
-  padding-top: clamp(72px, 9vh, 110px);
-  padding-bottom: clamp(20px, 3vh, 40px);
+  padding-block: clamp(80px, 9vh, 120px);
 }
 
 /* The composed unit: text + rings together. Lives inside .container so its
@@ -1271,7 +1269,10 @@ html {
 }
 
 .hero__scroll {
-  align-self: center;
+  position: absolute;
+  bottom: clamp(20px, 3.5vh, 40px);
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .hero__rings {
