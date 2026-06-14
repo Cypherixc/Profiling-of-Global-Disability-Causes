@@ -870,140 +870,119 @@ body {
   }
 }
 
-/* ---------- Why important (peelable notes) ---------- */
-.why__lead {
-  margin: 18px 0 0;
-  font-size: 14px;
-  color: var(--c-text-muted);
-}
-
-.why__grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: clamp(12px, 1.4vw, 20px);
+/* ---------- Why important (horizontal accordion) ---------- */
+.why__acc {
+  display: flex;
+  gap: 10px;
+  height: 460px;
   margin-top: clamp(28px, 4vw, 48px);
 }
 
-.note {
+.acc-item {
   position: relative;
-  min-height: 230px;
-  perspective: 1100px;
-}
-
-/* revealed content (sits underneath the cover) */
-.note__content {
-  height: 100%;
-  min-height: 230px;
-  border-radius: 10px;
-  padding: 18px;
-  background: color-mix(in srgb, var(--note-color) 15%, #141414);
-  border: 1px solid color-mix(in srgb, var(--note-color) 35%, transparent);
-  display: flex;
-  flex-direction: column;
-}
-
-.note__content .note__num {
-  color: var(--note-color);
-}
-
-.note__title {
-  margin: 8px 0 10px;
-  font-size: 15px;
-  font-weight: 700;
-  line-height: 1.25;
-}
-
-.note__body {
-  margin: 0;
-  font-size: 12.5px;
-  line-height: 1.55;
-  color: var(--c-text-muted);
-}
-
-.note__num {
-  font-size: 13px;
-  font-weight: 600;
-}
-
-/* the sticky-note cover that peels away */
-.note__cover {
-  position: absolute;
-  inset: 0;
-  appearance: none;
+  flex: 1 1 0;
+  min-width: 0;
   border: 0;
   margin: 0;
-  border-radius: 10px;
-  padding: 18px;
-  font: inherit;
-  text-align: left;
+  border-radius: 14px;
+  overflow: hidden;
   cursor: pointer;
-  background: var(--note-color);
-  color: #0e0e0e;
+  text-align: left;
+  font: inherit;
+  color: #fff;
+  background: linear-gradient(155deg,
+    var(--c),
+    color-mix(in srgb, var(--c) 28%, #141414));
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transform-origin: center;
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1),
-    box-shadow 0.6s ease;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  align-items: flex-start;
+  padding: 24px;
+  transition: flex-grow 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.note__cover .note__num {
-  color: rgba(0, 0, 0, 0.5);
+.acc-item.is-active {
+  flex-grow: 4.4;
+  cursor: default;
 }
 
-.note__hint {
-  font-size: 17px;
+.acc-item__num {
+  font-size: 34px;
   font-weight: 700;
-  line-height: 1.25;
+  line-height: 1;
+  opacity: 0.85;
 }
 
-/* folded corner (top-right) — hints the note is peelable */
-.note__peel {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 0 0 34px 34px;
-  border-color: transparent transparent
-    color-mix(in srgb, var(--note-color) 55%, #000) transparent;
-  border-top-right-radius: 10px;
-  filter: drop-shadow(-2px 2px 3px rgba(0, 0, 0, 0.35));
-  transition: border-width 0.25s ease;
+.acc-item__panel {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-.note:hover .note__peel {
-  border-width: 0 0 46px 46px;
+.acc-item__title {
+  margin: 0;
+  font-weight: 700;
+  /* collapsed: vertical along the spine */
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
+  font-size: 18px;
+  line-height: 1.2;
 }
 
-.note.is-open .note__cover {
-  transform: rotate3d(1, 1, 0, 180deg);
-  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.45);
+.acc-item.is-active .acc-item__title {
+  writing-mode: horizontal-tb;
+  transform: none;
+  white-space: normal;
+  font-size: clamp(20px, 2vw, 26px);
+  max-width: 22ch;
 }
 
-.note__cover:focus-visible {
+.acc-item__body {
+  margin: 16px 0 0;
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 56ch;
+  color: rgba(255, 255, 255, 0.92);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  display: none;
+}
+
+.acc-item.is-active .acc-item__body {
+  display: block;
+  opacity: 1;
+  transition-delay: 0.2s;
+}
+
+.acc-item:focus-visible {
   outline: 2px solid #fff;
   outline-offset: 3px;
 }
 
 @media (max-width: 900px) {
-  .why__grid {
-    grid-template-columns: repeat(2, 1fr);
+  .why__acc {
+    flex-direction: column;
+    height: auto;
+  }
+  .acc-item {
+    flex: none;
+    min-height: 84px;
+  }
+  .acc-item.is-active {
+    min-height: 220px;
+  }
+  .acc-item__title {
+    writing-mode: horizontal-tb;
+    transform: none;
+    white-space: normal;
+    font-size: 18px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .note__cover {
-    transition: opacity 0.3s ease;
-  }
-  .note.is-open .note__cover {
-    transform: none;
-    opacity: 0;
-    pointer-events: none;
+  .acc-item {
+    transition: none;
   }
 }
 
