@@ -1180,13 +1180,12 @@ html {
   margin: 0;
   font-size: 15px;
   line-height: 1.65;
-  max-width: 64ch;
   color: rgba(var(--c-fg-rgb), 0.88);
 }
 
 .acc-item__illo {
   flex-shrink: 0;
-  width: clamp(110px, 12vw, 164px);
+  width: clamp(96px, 9.5vw, 132px);
   height: auto;
   /* illustrations ship dark/two-tone — normalise to clean line-art that
      matches the theme (white on dark, black on light) */
