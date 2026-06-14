@@ -1160,17 +1160,19 @@ html {
   overflow: hidden;
   min-height: 0;
   display: flex;
-  align-items: center;
+  /* top-aligned so the text reveals straight down instead of sliding as the
+     row grows (which read as a vertical "jump") */
+  align-items: flex-start;
   gap: clamp(24px, 4vw, 64px);
-  padding: 0 clamp(20px, 3vw, 32px) 0 calc(clamp(20px, 3vw, 32px) + 42px);
+  /* padding is static (incl. bottom) so only the row height animates */
+  padding: 0 clamp(20px, 3vw, 32px) 30px calc(clamp(20px, 3vw, 32px) + 42px);
   opacity: 0;
-  transition: opacity 0.35s ease, padding-bottom 0.45s ease;
+  transition: opacity 0.3s ease;
 }
 
 .acc-item.is-active .acc-item__inner {
   opacity: 1;
-  padding-bottom: 30px;
-  transition-delay: 0.12s;
+  transition-delay: 0.1s;
 }
 
 .acc-item__body {
@@ -1196,6 +1198,37 @@ html {
   .acc-item__illo {
     display: none;
   }
+}
+
+/* Back-to-top at the foot of the last module */
+.back-to-top-wrap {
+  text-align: center;
+  margin-top: clamp(40px, 6vh, 72px);
+}
+
+.back-to-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(var(--c-fg-rgb), 0.2);
+  background: transparent;
+  color: var(--c-text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.back-to-top:hover {
+  color: var(--c-text);
+  border-color: rgba(var(--c-fg-rgb), 0.42);
+  background: rgba(var(--c-fg-rgb), 0.06);
+}
+
+.back-to-top svg {
+  display: block;
 }
 
 .acc-item:focus-visible {
