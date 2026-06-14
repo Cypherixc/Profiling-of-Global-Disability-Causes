@@ -69,15 +69,16 @@ html {
 
 .hero,
 .section {
-  /* ~full screen, but short modules (hero, By region) no longer over-centre,
-     so inter-module spacing stays even; a sliver of the next module peeks in */
-  min-height: 90vh;
+  /* ~full screen, but capped so on tall monitors short modules (hero, By
+     region) don't over-centre — keeps inter-module spacing even everywhere */
+  min-height: min(90vh, 800px);
 }
 
 /* ---------- Generic section ---------- */
 .section {
-  /* ~120px top & bottom → ~240px between adjacent modules */
-  padding-block: clamp(88px, 14vh, 152px);
+  /* caps at 120px each side → ~240px between modules; won't keep growing on
+     tall screens (was 14vh, which ballooned the gaps) */
+  padding-block: clamp(88px, 12vh, 120px);
   display: flex;
   flex-direction: column;
   /* centre when content fits; fall back to top-aligned when taller than viewport */
@@ -1250,7 +1251,7 @@ html {
 /* ---------- Hero ---------- */
 .hero {
   position: relative;
-  min-height: 90vh;
+  min-height: min(90vh, 800px);
   display: flex;
   flex-direction: column;
   justify-content: center;
