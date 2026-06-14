@@ -333,20 +333,10 @@ html {
   color: var(--accent);
 }
 
-.region-stat__bar {
-  height: 4px;
-  border-radius: 4px;
-  background: rgba(var(--c-fg-rgb), 0.12);
-  overflow: hidden;
-}
-
-.region-stat__bar-fill {
-  display: block;
-  height: 100%;
-  width: 0; /* grown to its share width by JS when the module reveals */
-  border-radius: 4px;
+.region-stat__rule {
+  height: 1px;
   background: var(--accent);
-  transition: width 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  opacity: 0.6;
 }
 
 .region-stat__name {

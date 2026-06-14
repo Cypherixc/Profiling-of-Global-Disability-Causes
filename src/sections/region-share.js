@@ -31,11 +31,9 @@ const REGIONS = [
   { key: "western-pacific", name: "Western Pacific", value: "15.37%", color: "#63c1c2" },
 ];
 
-// Numeric value, rank (1 = largest share) and bar length (relative to the
-// largest region) derived once from REGIONS.
+// Numeric value and rank (1 = largest share) derived once from REGIONS.
 const META = (() => {
   const nums = REGIONS.map((r) => parseFloat(r.value));
-  const max = Math.max(...nums);
   const order = REGIONS.map((r, i) => ({ key: r.key, n: nums[i] })).sort(
     (a, b) => b.n - a.n
   );
@@ -43,7 +41,7 @@ const META = (() => {
   order.forEach((r, i) => (rank[r.key] = i + 1));
   const meta = {};
   REGIONS.forEach((r, i) => {
-    meta[r.key] = { num: nums[i], pct: (nums[i] / max) * 100, rank: rank[r.key] };
+    meta[r.key] = { num: nums[i], rank: rank[r.key] };
   });
   return meta;
 })();
@@ -51,7 +49,7 @@ const META = (() => {
 const statBlock = ({ key, name, value, color }) => `
   <div class="region-stat" data-region="${key}" style="--accent:${color}">
     <span class="region-stat__value" data-target="${META[key].num}">${value}</span>
-    <span class="region-stat__bar"><span class="region-stat__bar-fill" style="--pct:${META[key].pct}%"></span></span>
+    <span class="region-stat__rule"></span>
     <span class="region-stat__name">${name}</span>
   </div>
 `;
@@ -115,10 +113,6 @@ function wireReveal(section) {
   const reveal = () => {
     if (done) return;
     done = true;
-    // Grow the bars to their share width (CSS transition handles the motion).
-    section.querySelectorAll(".region-stat__bar-fill").forEach((f) => {
-      f.style.width = f.style.getPropertyValue("--pct");
-    });
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) return;
     values.forEach((el) => {
