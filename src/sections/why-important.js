@@ -36,9 +36,12 @@ function itemEl(r, i) {
   return `
     <button class="acc-item${i === 0 ? " is-active" : ""}" type="button"
       style="--c:${r.color}" data-index="${i}" aria-expanded="${i === 0}">
-      <span class="acc-item__num">${i + 1}</span>
-      <div class="acc-item__panel">
+      <div class="acc-item__head">
+        <span class="acc-item__num">${i + 1}</span>
         <h3 class="acc-item__title">${r.title}</h3>
+        <span class="acc-item__chevron" aria-hidden="true"></span>
+      </div>
+      <div class="acc-item__bodywrap">
         <p class="acc-item__body">${r.body}</p>
       </div>
     </button>`;
