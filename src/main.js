@@ -7,6 +7,7 @@ import { renderDisparities } from "./sections/disparities.js";
 import { renderWhyImportant } from "./sections/why-important.js";
 import { renderNav } from "./nav.js";
 import { renderTopbar } from "./topbar.js";
+import { renderFooter } from "./footer.js";
 
 const app = document.querySelector("#app");
 
@@ -29,6 +30,7 @@ sections.forEach(([el, id]) => {
   main.append(el);
 });
 app.append(main);
+app.append(renderFooter());
 
 const navItems = [
   { id: "hero", label: "Intro" },

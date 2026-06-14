@@ -19,6 +19,15 @@ export function renderHero() {
 
   section.innerHTML = `
     <div class="hero__stage">
+      <div class="hero__credit">
+        <img class="hero__credit-who" src="/assets/who-logo.svg"
+          alt="World Health Organization" />
+        <span class="hero__credit-sep" aria-hidden="true"></span>
+        <img class="vfsg vfsg--on-dark" src="/assets/vfsg-on-dark.png"
+          alt="Project and visualization by Viz for Social Good" />
+        <img class="vfsg vfsg--on-light" src="/assets/vfsg-on-light.png"
+          alt="Project and visualization by Viz for Social Good" />
+      </div>
       <svg class="hero__rings" viewBox="0 0 670 620" fill="none" aria-hidden="true"
         xmlns="http://www.w3.org/2000/svg">
         <!-- All true circles, so each spins about its own centre without

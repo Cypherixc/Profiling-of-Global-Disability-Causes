@@ -1399,3 +1399,93 @@ html {
     display: none;
   }
 }
+
+/* ---------- Partner logos (header credit + footer) ---------- */
+/* The VFSG lockup ships in two versions; show the one that fits the theme. */
+.vfsg--on-light {
+  display: none;
+}
+.vfsg--on-dark {
+  display: block;
+}
+:root[data-theme="light"] .vfsg--on-dark {
+  display: none;
+}
+:root[data-theme="light"] .vfsg--on-light {
+  display: block;
+}
+
+/* Header credit — sits at the top-left of the hero stage, above the title. */
+.hero__credit {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  opacity: 0;
+  animation: ring-in 1s 0.3s ease forwards;
+}
+.hero__credit-who {
+  height: 34px;
+  width: auto;
+  display: block;
+}
+.hero__credit-sep {
+  width: 1px;
+  height: 24px;
+  background: rgba(var(--c-fg-rgb), 0.25);
+}
+.hero__credit .vfsg {
+  height: 26px;
+  width: auto;
+}
+
+/* Footer */
+.site-footer {
+  margin-top: clamp(48px, 9vh, 120px);
+  padding-block: clamp(40px, 6vw, 72px);
+  border-top: 1px solid rgba(var(--c-fg-rgb), 0.12);
+}
+.site-footer__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.site-footer__logos {
+  display: flex;
+  align-items: center;
+  gap: clamp(24px, 3vw, 40px);
+}
+.site-footer__who {
+  height: 48px;
+  width: auto;
+  display: block;
+}
+.site-footer .vfsg {
+  height: 40px;
+  width: auto;
+}
+.site-footer__credit {
+  margin: 0;
+  max-width: 70ch;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--c-text-muted);
+}
+.site-footer__source {
+  display: block;
+}
+
+@media (max-width: 620px) {
+  .site-footer__logos {
+    flex-wrap: wrap;
+  }
+  .hero__credit-who {
+    height: 28px;
+  }
+  .hero__credit .vfsg {
+    height: 22px;
+  }
+}
