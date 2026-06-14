@@ -112,10 +112,11 @@ html {
   background: rgba(255, 255, 255, 0.7);
 }
 
-/* Active marker is a vertical rounded capsule, not an enlarged dot. */
+/* Active marker keeps the dot's width and stretches vertically into a
+   rounded capsule, so the transition reads as the dot elongating. */
 .dotnav__dot.is-active::after {
-  width: 5px;
-  height: 24px;
+  width: 8px;
+  height: 26px;
   background: #fff;
 }
 
