@@ -20,7 +20,7 @@ export function renderHero() {
   section.innerHTML = `
     <div class="hero__stage">
       <div class="hero__credit">
-        <img class="hero__credit-who" src="/assets/who-logo.svg"
+        <img class="who-logo" src="/assets/who-logo.svg"
           alt="World Health Organization" />
         <span class="hero__credit-sep" aria-hidden="true"></span>
         <img class="vfsg vfsg--on-dark" src="/assets/vfsg-on-dark.png"
