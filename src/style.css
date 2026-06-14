@@ -1151,20 +1151,21 @@ html {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
   gap: clamp(40px, 8vh, 96px);
   padding-block: clamp(48px, 8vh, 120px);
-  padding-inline: var(--pad-x);
 }
 
-/* The composed unit: text + rings together. Aspect ratio matches Figma
-   Frame 121 (1327×620) so the whole block scales as one, capped at 1440. */
+/* The composed unit: text + rings together. Lives inside .container so its
+   edges align with every other module; aspect ratio matches Figma Frame 121. */
 .hero__stage {
   position: relative;
   width: 100%;
-  max-width: 1327px;
   aspect-ratio: 1327 / 620;
+}
+
+.hero__scroll {
+  align-self: center;
 }
 
 .hero__rings {

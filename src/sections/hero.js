@@ -18,6 +18,7 @@ export function renderHero() {
   section.className = "hero";
 
   section.innerHTML = `
+    <div class="container">
     <div class="hero__stage">
       <div class="hero__credit">
         <img class="who-logo" src="/assets/who-logo.svg"
@@ -63,6 +64,7 @@ export function renderHero() {
         <h1 class="hero__title">${TITLE}</h1>
         <p class="hero__body">${BODY}</p>
       </div>
+    </div>
     </div>
     <a class="hero__scroll" href="#main" aria-label="Scroll down">
       <span>Scroll down</span>
