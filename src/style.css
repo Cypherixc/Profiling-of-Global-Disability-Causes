@@ -890,20 +890,24 @@ body {
   text-align: left;
   font: inherit;
   color: #fff;
-  background: linear-gradient(155deg,
-    var(--c),
-    color-mix(in srgb, var(--c) 28%, #141414));
+  /* collapsed: dark strip with a faint colour identity */
+  background: color-mix(in srgb, var(--c) 12%, #15181e);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
   padding: 24px;
-  transition: flex-grow 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: flex-grow 0.55s cubic-bezier(0.2, 0.8, 0.2, 1),
+    background 0.55s ease;
 }
 
 .acc-item.is-active {
   flex-grow: 4.4;
   cursor: default;
+  /* active: colour at the top fading down into near-black */
+  background: linear-gradient(162deg,
+    var(--c) -5%,
+    color-mix(in srgb, var(--c) 14%, #0f1218) 88%);
 }
 
 .acc-item__num {
