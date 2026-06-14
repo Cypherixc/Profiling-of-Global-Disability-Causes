@@ -42,9 +42,32 @@ body {
   padding-inline: var(--pad-x);
 }
 
+/* ---------- Scroll snap (one module ≈ one viewport) ---------- */
+html {
+  scroll-snap-type: y proximity;
+  scroll-behavior: smooth;
+}
+
+.hero,
+.section {
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
+  min-height: 100vh;
+}
+
 /* ---------- Generic section ---------- */
 .section {
   padding-block: clamp(56px, 9vh, 120px);
+  display: flex;
+  flex-direction: column;
+  /* centre when content fits; fall back to top-aligned when taller than viewport */
+  justify-content: safe center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 .section__title {
@@ -56,7 +79,7 @@ body {
 }
 
 .section__rule {
-  height: 1px;
+  height: 2px;
   background: rgba(255, 255, 255, 0.25);
   margin-top: 20px;
 }
