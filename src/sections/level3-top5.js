@@ -96,8 +96,8 @@ export function renderLevel3Top5() {
               <circle class="level3__focus-bubble" cx="150" cy="150" r="0" fill="#4690cd" />
               ${DET_RINGS.map((v) => {
                 const r = detRadius(v);
-                return `<circle cx="150" cy="150" r="${r}" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
-                  <text x="150" y="${150 - r - 5}" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.5)">${v * 100}%</text>`;
+                return `<circle cx="150" cy="150" r="${r}" fill="none" stroke="currentColor" stroke-opacity="0.3" stroke-width="1"/>
+                  <text x="150" y="${150 - r - 5}" text-anchor="middle" font-size="10" fill="currentColor" fill-opacity="0.5">${v * 100}%</text>`;
               }).join("")}
             </svg>
           </div>

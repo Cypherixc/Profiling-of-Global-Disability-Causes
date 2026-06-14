@@ -23,6 +23,12 @@ export function renderNav(items) {
   const dots = new Map();
   nav.querySelectorAll(".dotnav__dot").forEach((d) => dots.set(d.dataset.id, d));
 
+  // Top-bar links (if present) share the active state with the side dots.
+  const topLinks = new Map();
+  document
+    .querySelectorAll(".topbar__link")
+    .forEach((l) => topLinks.set(l.dataset.id, l));
+
   const setActive = (id) => {
     dots.forEach((d, key) => {
       const on = key === id;
@@ -30,6 +36,7 @@ export function renderNav(items) {
       if (on) d.setAttribute("aria-current", "true");
       else d.removeAttribute("aria-current");
     });
+    topLinks.forEach((l, key) => l.classList.toggle("is-active", key === id));
   };
 
   const ids = items.map((it) => it.id);
