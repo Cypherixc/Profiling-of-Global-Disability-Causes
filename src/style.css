@@ -873,48 +873,49 @@ body {
 /* ---------- Why important (horizontal accordion) ---------- */
 .why__acc {
   display: flex;
-  gap: 10px;
-  height: 460px;
+  gap: 0;
+  height: 500px;
   margin-top: clamp(28px, 4vw, 48px);
 }
 
 .acc-item {
   position: relative;
-  flex: 1 1 0;
+  flex: 1 1 0; /* collapsed strips share the remainder ~120/1660 each */
   min-width: 0;
   border: 0;
   margin: 0;
-  border-radius: 14px;
+  border-radius: 0;
   overflow: hidden;
   cursor: pointer;
   text-align: left;
   font: inherit;
   color: #fff;
-  /* collapsed: dark strip with a faint colour identity */
-  background: color-mix(in srgb, var(--c) 12%, #15181e);
+  background: var(--c-bg); /* collapsed: plain dark, no tint */
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 24px;
-  transition: flex-grow 0.55s cubic-bezier(0.2, 0.8, 0.2, 1),
-    background 0.55s ease;
+  padding: 28px 26px;
+  transition: flex-grow 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
+/* active: ~71% width, region colour at the top fading to the page bg */
 .acc-item.is-active {
-  flex-grow: 4.4;
+  flex-grow: 9.8;
   cursor: default;
-  /* active: colour at the top fading down into near-black */
-  background: linear-gradient(162deg,
-    var(--c) -5%,
-    color-mix(in srgb, var(--c) 14%, #0f1218) 88%);
+  background: linear-gradient(180deg, var(--c) 0%, transparent 78%),
+    var(--c-bg);
 }
 
 .acc-item__num {
-  font-size: 34px;
+  font-size: 30px;
   font-weight: 700;
   line-height: 1;
-  opacity: 0.85;
+}
+
+.acc-item.is-active .acc-item__num {
+  font-size: clamp(40px, 4vw, 56px);
 }
 
 .acc-item__panel {
