@@ -182,6 +182,7 @@ export function renderLevel2Bubbles() {
   section.innerHTML = `
     <div class="container">
       <h2 class="section__title">Top level 2 Health Conditions Causing Disability by WHO Regions</h2>
+      <div class="section__rule"></div>
 
       <div class="level2__body">
         <aside class="level2__aside">

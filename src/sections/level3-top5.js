@@ -84,6 +84,7 @@ export function renderLevel3Top5() {
   section.innerHTML = `
     <div class="container">
       <h2 class="section__title">Top 5 level 3 Health Conditions Causing Disability by WHO Regions</h2>
+      <div class="section__rule"></div>
 
       <p class="level3__paragraph">${PARAGRAPH} <span class="level3__cta">Click any bubble to explore each condition.</span></p>
 

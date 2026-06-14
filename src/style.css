@@ -175,10 +175,15 @@ html {
   color: var(--c-text);
 }
 
+.section__rule {
+  height: 2px;
+  background: rgba(var(--c-fg-rgb), 0.25);
+  margin-top: 20px;
+}
+
 .section__intro {
   margin: 18px 0 0;
-  max-width: 70ch;
-  font-size: clamp(14px, 1.2vw, 16px);
+  font-size: 14px;
   line-height: 1.6;
   color: var(--c-text-muted);
 }
@@ -1169,6 +1174,8 @@ html {
   /* 670 / 1327 of the stage width — keeps the SVG's 1:1 (undistorted) ratio */
   width: 50.49%;
   height: auto;
+  /* let rotated rings paint past the viewBox rather than clip at its edge */
+  overflow: visible;
   pointer-events: none;
   user-select: none;
   opacity: 0;
@@ -1329,10 +1336,8 @@ html {
 .topbar__link {
   position: relative;
   padding: 4px 0;
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
+  font-size: 13px;
+  font-weight: 500;
   color: var(--c-text-muted);
   text-decoration: none;
   white-space: nowrap;
