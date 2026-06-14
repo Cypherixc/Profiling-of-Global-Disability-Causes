@@ -76,8 +76,8 @@ html {
 
 /* ---------- Generic section ---------- */
 .section {
-  /* ~100px top & bottom → ~200px between adjacent modules */
-  padding-block: clamp(72px, 11.6vh, 132px);
+  /* ~120px top & bottom → ~240px between adjacent modules */
+  padding-block: clamp(88px, 14vh, 152px);
   display: flex;
   flex-direction: column;
   /* centre when content fits; fall back to top-aligned when taller than viewport */
