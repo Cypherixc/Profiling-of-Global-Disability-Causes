@@ -76,7 +76,8 @@ html {
 
 /* ---------- Generic section ---------- */
 .section {
-  padding-block: clamp(56px, 9vh, 120px);
+  /* ~100px top & bottom → ~200px between adjacent modules */
+  padding-block: clamp(72px, 11.6vh, 132px);
   display: flex;
   flex-direction: column;
   /* centre when content fits; fall back to top-aligned when taller than viewport */
@@ -1218,8 +1219,11 @@ html {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: clamp(40px, 8vh, 96px);
-  padding-block: clamp(48px, 8vh, 120px);
+  /* tighter gap to the scroll cue */
+  gap: clamp(18px, 2.6vh, 34px);
+  /* top clears the fixed bar; bottom kept small so hero→By region ≈ 200 */
+  padding-top: clamp(72px, 9vh, 110px);
+  padding-bottom: clamp(20px, 3vh, 40px);
 }
 
 /* The composed unit: text + rings together. Lives inside .container so its
