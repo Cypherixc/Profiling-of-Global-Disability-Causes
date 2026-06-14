@@ -1186,7 +1186,7 @@ html {
 
 .acc-item__illo {
   flex-shrink: 0;
-  width: clamp(120px, 15vw, 196px);
+  width: clamp(110px, 12vw, 164px);
   height: auto;
   /* illustrations ship dark/two-tone — normalise to clean line-art that
      matches the theme (white on dark, black on light) */
