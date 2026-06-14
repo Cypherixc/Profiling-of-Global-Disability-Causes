@@ -31,9 +31,24 @@ const REGIONS = [
   { key: "western-pacific", name: "Western Pacific", value: "15.37%", color: "#63c1c2" },
 ];
 
+// Numeric value and rank (1 = largest share) derived once from REGIONS.
+const META = (() => {
+  const nums = REGIONS.map((r) => parseFloat(r.value));
+  const order = REGIONS.map((r, i) => ({ key: r.key, n: nums[i] })).sort(
+    (a, b) => b.n - a.n
+  );
+  const rank = {};
+  order.forEach((r, i) => (rank[r.key] = i + 1));
+  const meta = {};
+  REGIONS.forEach((r, i) => {
+    meta[r.key] = { num: nums[i], rank: rank[r.key] };
+  });
+  return meta;
+})();
+
 const statBlock = ({ key, name, value, color }) => `
   <div class="region-stat" data-region="${key}" style="--accent:${color}">
-    <span class="region-stat__value">${value}</span>
+    <span class="region-stat__value" data-target="${META[key].num}">${value}</span>
     <span class="region-stat__rule"></span>
     <span class="region-stat__name">${name}</span>
   </div>
@@ -53,10 +68,18 @@ export function renderRegionShare() {
     <div class="container">
       <h2 class="section__title">Percentage of Total Global Disabilities by WHO Regions</h2>
       <div class="section__rule"></div>
+      <p class="section__intro">The WHO divides the world into six regions. The map and figures below show how the global burden of disability is shared among them — each region's portion of the total prevalence of disability worldwide. Hover over a region to isolate its share from the rest.</p>
 
       <div class="region-share__body">
         <div class="region-share__map">
           <div class="region-share__map-svg">${mapSvg}</div>
+          <div class="region-tooltip" role="status" aria-hidden="true">
+            <span class="region-tooltip__name"></span>
+            <span class="region-tooltip__meta">
+              <span class="region-tooltip__value"></span>
+              <span class="region-tooltip__rank"></span>
+            </span>
+          </div>
           <ul class="region-legend">
             ${REGIONS.map(legendItem).join("")}
             <li class="region-legend__item">
@@ -72,7 +95,48 @@ export function renderRegionShare() {
   `;
 
   wireHover(section);
+  wireReveal(section);
   return section;
+}
+
+// Region name lookup for the tooltip.
+const REGION_BY_KEY = Object.fromEntries(REGIONS.map((r) => [r.key, r]));
+
+// Count the figures up from zero and grow the bars when the module first
+// scrolls into view. Values render at their final text up-front, so they stay
+// correct even where IntersectionObserver doesn't fire.
+function wireReveal(section) {
+  const stats = section.querySelector(".region-share__stats");
+  const values = [...section.querySelectorAll(".region-stat__value")];
+  let done = false;
+
+  const reveal = () => {
+    if (done) return;
+    done = true;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) return;
+    values.forEach((el) => {
+      const target = parseFloat(el.dataset.target);
+      const start = performance.now();
+      const dur = 900;
+      const tick = (now) => {
+        const t = Math.min(1, (now - start) / dur);
+        const eased = 1 - Math.pow(1 - t, 3);
+        el.textContent = (target * eased).toFixed(2) + "%";
+        if (t < 1) requestAnimationFrame(tick);
+        else el.textContent = target.toFixed(2) + "%";
+      };
+      requestAnimationFrame(tick);
+    });
+  };
+
+  const io = new IntersectionObserver(
+    (entries) => entries.forEach((e) => e.isIntersecting && reveal()),
+    { threshold: 0.35 }
+  );
+  io.observe(stats);
+  // Safety net for environments/timing where the observer never fires.
+  setTimeout(reveal, 2500);
 }
 
 function wireHover(section) {
@@ -91,6 +155,8 @@ function wireHover(section) {
   }
 
   const stats = section.querySelector(".region-share__stats");
+  const mapWrap = section.querySelector(".region-share__map");
+  const tip = section.querySelector(".region-tooltip");
 
   const setActive = (region) => {
     section.classList.toggle("is-highlighting", Boolean(region));
@@ -99,13 +165,40 @@ function wireHover(section) {
     });
   };
 
+  const showTip = (region, clientX, clientY) => {
+    const r = REGION_BY_KEY[region];
+    if (!r) return hideTip();
+    const box = mapWrap.getBoundingClientRect();
+    tip.style.setProperty("--accent", r.color);
+    tip.querySelector(".region-tooltip__name").textContent = r.name;
+    tip.querySelector(".region-tooltip__value").textContent = r.value;
+    tip.querySelector(".region-tooltip__rank").textContent = `Rank #${META[region].rank}`;
+    tip.style.left = `${clientX - box.left}px`;
+    tip.style.top = `${clientY - box.top}px`;
+    tip.classList.add("is-visible");
+  };
+  const hideTip = () => tip.classList.remove("is-visible");
+
   // Event delegation: hovering any tagged element drives the highlight.
   const onMove = (e) => {
     const el = e.target.closest("[data-region]");
     setActive(el ? el.dataset.region : null);
   };
-  svg?.addEventListener("mousemove", onMove);
-  svg?.addEventListener("mouseleave", () => setActive(null));
+  // The tooltip follows the cursor over the map only.
+  const onMapMove = (e) => {
+    const el = e.target.closest("[data-region]");
+    if (el) showTip(el.dataset.region, e.clientX, e.clientY);
+    else hideTip();
+  };
+
+  svg?.addEventListener("mousemove", (e) => {
+    onMove(e);
+    onMapMove(e);
+  });
+  svg?.addEventListener("mouseleave", () => {
+    setActive(null);
+    hideTip();
+  });
   stats.addEventListener("mousemove", onMove);
   stats.addEventListener("mouseleave", () => setActive(null));
 }

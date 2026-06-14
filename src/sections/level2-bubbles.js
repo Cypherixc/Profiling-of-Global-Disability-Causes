@@ -107,22 +107,22 @@ function bubbleCell({ cause, regionName, rec, color, rank, edge, z }) {
 // Geometry mirrors the Figma export (viewBox 346 x 471).
 function howToReadDiagram() {
   const teal = "#24aca4";
-  const line = "rgba(255,255,255,1)"; // full-opacity guide lines
+  const line = "currentColor"; // full-opacity guide lines
   // callout line + its wrapped label
   const callout = (x, topY, lines) => `
     <line x1="${x}" y1="${topY}" x2="${x}" y2="252" stroke="${line}" stroke-width="0.5"/>
     <circle cx="${x}" cy="${topY}" r="1.6" fill="${line}"/>
-    <text x="${x + 8}" y="${topY + 4}" fill="#cfcfcf" font-size="12">${lines
+    <text x="${x + 8}" y="${topY + 4}" fill="currentColor" fill-opacity="0.8" font-size="12">${lines
       .map((t, i) => `<tspan x="${x + 8}" dy="${i === 0 ? 0 : 15}">${t}</tspan>`)
       .join("")}</text>`;
   // size-scale bubble: label on top, line down to a centre dot inside the bubble
   const SCALE_LABEL_Y = 322;
   const SCALE_CY = 376;
   const scale = (cx, r, label) => `
-    <text x="${cx}" y="${SCALE_LABEL_Y}" fill="#b8b8b8" font-size="12" text-anchor="middle">${label}</text>
+    <text x="${cx}" y="${SCALE_LABEL_Y}" fill="currentColor" fill-opacity="0.72" font-size="12" text-anchor="middle">${label}</text>
     <line x1="${cx}" y1="${SCALE_LABEL_Y + 10}" x2="${cx}" y2="${SCALE_CY}" stroke="${line}" stroke-width="0.5"/>
-    <circle cx="${cx}" cy="${SCALE_CY}" r="${r}" fill="${teal}" fill-opacity="0.8" stroke="#fff" stroke-width="0.5"/>
-    <circle cx="${cx}" cy="${SCALE_CY}" r="1.6" fill="#fff"/>`;
+    <circle cx="${cx}" cy="${SCALE_CY}" r="${r}" fill="${teal}" fill-opacity="0.8" stroke="currentColor" stroke-width="0.5"/>
+    <circle cx="${cx}" cy="${SCALE_CY}" r="1.6" fill="currentColor"/>`;
 
   return `
     <svg class="level2__howto" viewBox="0 0 360 404" role="img"
@@ -137,12 +137,12 @@ function howToReadDiagram() {
       ${callout(170, 210, ["Circle Size Reference: 3%"])}
 
       <!-- sample cell — guide line stops at the bubble's right edge (161 + r17) -->
-      <line x1="92" y1="252" x2="178" y2="252" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
-      <circle cx="92" cy="252" r="1.6" fill="rgba(255,255,255,0.2)"/>
-      <text x="0" y="256" fill="#cfcfcf" font-size="13">Neoplasms</text>
+      <line x1="92" y1="252" x2="178" y2="252" stroke="currentColor" stroke-opacity="0.2" stroke-width="0.5"/>
+      <circle cx="92" cy="252" r="1.6" fill="currentColor" fill-opacity="0.2"/>
+      <text x="0" y="256" fill="currentColor" fill-opacity="0.8" font-size="13">Neoplasms</text>
       <text x="110" y="257" fill="${teal}" font-size="14" font-weight="600">5</text>
-      <circle cx="161" cy="252" r="17" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="0.5"/>
-      <circle cx="161" cy="252" r="12" fill="${teal}" stroke="#202020" stroke-width="1"/>
+      <circle cx="161" cy="252" r="17" fill="none" stroke="currentColor" stroke-opacity="0.5" stroke-width="0.5"/>
+      <circle class="l2-howto-bubble" cx="161" cy="252" r="12" fill="${teal}" stroke-width="1"/>
 
       <!-- size scale -->
       ${scale(35, 8, "1%")}

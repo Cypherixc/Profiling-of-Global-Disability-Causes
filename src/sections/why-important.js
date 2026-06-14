@@ -9,31 +9,31 @@ const REASONS = [
     color: "#4690cd",
     illo: "/assets/why/why-1.svg",
     title: "Revealing Resource Allocation and Intervention Priorities",
-    body: "By understanding the diverse causes of disability in different regions, policymakers and decision-makers can better allocate resources and determine the priority of interventions. Different regions may face distinct challenges and needs, and understanding these differences can help formulate targeted health policies and strategies.",
+    body: "By understanding the diverse causes of disability across different regions, policymakers and decision-makers can allocate resources more effectively and set clearer priorities for intervention. Each region faces a distinct mix of challenges — shaped by its economy, environment, demographics, and health infrastructure — so a one-size-fits-all approach rarely works. Comparing these differences makes it possible to direct funding, staff, and programmes to where they will have the greatest impact, and to design targeted health policies and strategies that respond to the specific needs of each population.",
   },
   {
     color: "#24aca4",
     illo: "/assets/why/why-2.svg",
     title: "Guiding Prevention and Control Measures",
-    body: "Comparing the causes of disability in different regions can identify key risk factors and diseases affecting specific areas, thereby guiding the development of prevention and control measures. This aids in designing tailored public health strategies to reduce disability rates and improve the overall health of populations.",
+    body: "Comparing the causes of disability between regions helps identify the key risk factors and conditions that affect each area most heavily. This insight is essential for shaping prevention and control measures that fit local circumstances, rather than generic guidance applied everywhere. By pinpointing where a particular disease or injury is concentrated, public-health teams can design tailored screening, vaccination, and awareness programmes, intervene earlier, and ultimately reduce disability rates while improving the overall health and resilience of the populations they serve.",
   },
   {
     color: "#63c1c2",
     illo: "/assets/why/why-3.svg",
     title: "Improving Healthcare Services and Resource Distribution",
-    body: "Understanding the variations in causes of disability worldwide helps identify inequalities in healthcare services and resource distribution. This knowledge promotes equity in healthcare services and ensures fair resource allocation to meet specific needs in different regions.",
+    body: "Understanding how the causes of disability vary around the world brings inequalities in healthcare services and resource distribution into sharp focus. Some regions carry a far heavier burden yet have far fewer clinicians, facilities, and funds to address it. Recognising these gaps is the first step toward closing them: it supports fairer allocation of medical resources, encourages investment where shortages are greatest, and promotes genuine equity in care, so that people everywhere have a comparable opportunity to prevent, treat, and live well with disability.",
   },
   {
     color: "#b297c7",
     illo: "/assets/why/why-4.svg",
     title: "Increasing Awareness and Knowledge Dissemination",
-    body: "Comparing the causes of disability across global regions facilitates knowledge exchange and sharing. It helps raise public awareness about specific health issues and risk factors, promoting behavior change and healthier communities.",
+    body: "Comparing the causes of disability across global regions creates valuable opportunities for knowledge exchange and shared learning. When findings, data, and successful approaches move freely between countries, communities can learn from one another instead of repeating the same mistakes. This wider awareness helps the public, clinicians, and educators understand the specific health issues and risk factors that matter most in their context, encouraging informed behaviour change, stronger health literacy, and healthier, better-prepared communities over the long term.",
   },
   {
     color: "#8169ab",
     illo: "/assets/why/why-5.svg",
     title: "Supporting Global Collaboration and Cooperative Efforts",
-    body: "Understanding the causes of disability in different regions globally fosters international collaboration and joint efforts. It facilitates experience sharing, technology transfer, and collaborative projects to address global health challenges collectively.",
+    body: "Understanding the causes of disability in different regions lays the foundation for genuine international collaboration. Many of the challenges behind disability — from chronic disease to injury and ageing populations — cross borders and cannot be solved by any single country alone. A shared, comparable picture of the data makes it easier to pool expertise, transfer technology, coordinate research, and run joint projects, so that nations can tackle global health challenges collectively and turn individual insights into coordinated, lasting progress.",
   },
 ];
 
@@ -64,6 +64,15 @@ export function renderWhyImportant() {
       <div class="section__rule"></div>
       <div class="why__acc">
         ${REASONS.map(itemEl).join("")}
+      </div>
+      <div class="back-to-top-wrap">
+        <a class="back-to-top" href="#hero">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" aria-hidden="true">
+            <path d="M12 19V5M5 12l7-7 7 7" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <span>Back to top</span>
+        </a>
       </div>
     </div>
   `;
