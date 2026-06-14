@@ -69,7 +69,9 @@ html {
 
 .hero,
 .section {
-  min-height: 100vh;
+  /* ~full screen, but short modules (hero, By region) no longer over-centre,
+     so inter-module spacing stays even; a sliver of the next module peeks in */
+  min-height: 90vh;
 }
 
 /* ---------- Generic section ---------- */
@@ -201,10 +203,70 @@ html {
   margin-top: clamp(40px, 6vw, 96px);
 }
 
+.region-share__map {
+  position: relative;
+}
+
 .region-share__map-svg svg {
   display: block;
   width: 100%;
   height: auto;
+}
+
+.map-region {
+  cursor: pointer;
+}
+
+/* Cursor-following tooltip over the map. */
+.region-tooltip {
+  position: absolute;
+  z-index: 5;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 8px 11px;
+  border-radius: 8px;
+  background: rgba(var(--c-surface-rgb), 0.92);
+  backdrop-filter: blur(8px) saturate(1.2);
+  -webkit-backdrop-filter: blur(8px) saturate(1.2);
+  border: 1px solid rgba(var(--c-fg-rgb), 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  font-size: 12px;
+  line-height: 1.3;
+  color: var(--c-text);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, calc(-100% - 12px));
+  transition: opacity 0.15s ease;
+}
+
+.region-tooltip.is-visible {
+  opacity: 1;
+}
+
+.region-tooltip__name {
+  font-weight: 600;
+  border-left: 3px solid var(--accent, var(--c-text));
+  padding-left: 7px;
+}
+
+.region-tooltip__meta {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  padding-left: 10px;
+}
+
+.region-tooltip__value {
+  font-weight: 600;
+  color: var(--accent, var(--c-text));
+}
+
+.region-tooltip__rank {
+  color: var(--c-text-muted);
 }
 
 /* Hover linking: dim everything not under the cursor. */
@@ -271,10 +333,20 @@ html {
   color: var(--accent);
 }
 
-.region-stat__rule {
-  height: 1px;
+.region-stat__bar {
+  height: 4px;
+  border-radius: 4px;
+  background: rgba(var(--c-fg-rgb), 0.12);
+  overflow: hidden;
+}
+
+.region-stat__bar-fill {
+  display: block;
+  height: 100%;
+  width: 0; /* grown to its share width by JS when the module reveals */
+  border-radius: 4px;
   background: var(--accent);
-  opacity: 0.6;
+  transition: width 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .region-stat__name {
@@ -1152,7 +1224,7 @@ html {
 /* ---------- Hero ---------- */
 .hero {
   position: relative;
-  min-height: 100vh;
+  min-height: 90vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
