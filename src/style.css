@@ -1339,9 +1339,6 @@ html {
 }
 
 .topbar__link {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
   padding: 4px 0;
   font-size: 13px;
   font-weight: 500;
@@ -1351,24 +1348,12 @@ html {
   transition: color 0.2s ease;
 }
 
-/* Reserve the bold width so the active (bold) link doesn't nudge its
-   neighbours as the active section changes on scroll. */
-.topbar__link::after {
-  content: attr(data-label);
-  height: 0;
-  overflow: hidden;
-  visibility: hidden;
-  font-weight: 700;
-  pointer-events: none;
-}
-
 .topbar__link:hover {
   color: var(--c-text);
 }
 
 .topbar__link.is-active {
   color: var(--c-text);
-  font-weight: 700;
 }
 
 .topbar__theme {
