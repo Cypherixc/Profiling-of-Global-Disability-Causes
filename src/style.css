@@ -1437,8 +1437,6 @@ html {
   display: flex;
   align-items: center;
   gap: 20px;
-  opacity: 0;
-  animation: ring-in 1s 0.3s ease forwards;
 }
 .hero__credit-sep {
   width: 1px;
@@ -1464,7 +1462,6 @@ html {
 }
 .site-footer__credit {
   margin: 0;
-  max-width: 60ch;
   font-size: 13px;
   line-height: 1.6;
   color: var(--c-text-muted);
