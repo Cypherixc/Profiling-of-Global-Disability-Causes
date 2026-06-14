@@ -17,7 +17,7 @@ export function renderTopbar(items) {
           ${items
             .map(
               (it) =>
-                `<a class="topbar__link" href="#${it.id}" data-id="${it.id}">${it.label}</a>`
+                `<a class="topbar__link" href="#${it.id}" data-id="${it.id}" data-label="${it.label}">${it.label}</a>`
             )
             .join("")}
         </nav>

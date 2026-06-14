@@ -42,21 +42,44 @@ export function renderNav(items) {
   const ids = items.map((it) => it.id);
   const sections = ids.map((id) => document.getElementById(id)).filter(Boolean);
 
-  let currentId = ids[0];
+  let currentId = null;
 
-  // A thin band across the viewport centre decides the active module.
-  const io = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) {
-          currentId = e.target.id;
-          setActive(currentId);
-        }
-      });
-    },
-    { rootMargin: "-45% 0px -45% 0px", threshold: 0 }
-  );
-  sections.forEach((s) => io.observe(s));
+  // The active module is the last one whose top has scrolled past a reference
+  // line ~40% down the viewport. Scroll-position based (rather than
+  // IntersectionObserver) so it stays correct at the very top and bottom.
+  const computeActive = () => {
+    const line = window.innerHeight * 0.4;
+    let best = sections[0] && sections[0].id;
+    for (const s of sections) {
+      if (s.getBoundingClientRect().top - line <= 1) best = s.id;
+    }
+    const doc = document.documentElement;
+    if (window.innerHeight + window.scrollY >= doc.scrollHeight - 2) {
+      best = sections[sections.length - 1].id; // pin last at page bottom
+    }
+    return best;
+  };
+
+  const update = () => {
+    const next = computeActive();
+    if (next && next !== currentId) {
+      currentId = next;
+      setActive(currentId);
+    }
+  };
+
+  let ticking = false;
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      ticking = false;
+      update();
+    });
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll, { passive: true });
+  update();
 
   // Arrow up/down (and PageUp/PageDown) step between modules.
   window.addEventListener("keydown", (e) => {

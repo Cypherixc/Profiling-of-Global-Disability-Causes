@@ -33,12 +33,12 @@ app.append(main);
 app.append(renderFooter());
 
 const navItems = [
-  { id: "hero", label: "Intro" },
-  { id: "regions", label: "By region" },
-  { id: "level2", label: "Level 2 conditions" },
-  { id: "level3", label: "Top 5 level 3" },
+  { id: "hero", label: "Overview" },
+  { id: "regions", label: "By Region" },
+  { id: "level2", label: "Level 2 Conditions" },
+  { id: "level3", label: "Level 3 Conditions" },
   { id: "disparities", label: "Disparities" },
-  { id: "why", label: "Why it matters" },
+  { id: "why", label: "Why It Matters" },
 ];
 
 // Top bar must exist before the nav so it can pick up the section links.
