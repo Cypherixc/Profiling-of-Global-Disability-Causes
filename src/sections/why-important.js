@@ -61,7 +61,6 @@ export function renderWhyImportant() {
   section.innerHTML = `
     <div class="container">
       <h2 class="section__title">Why understanding and comparing the prevalence of causes of disability in various regions globally is important?</h2>
-      <div class="section__rule"></div>
       <div class="why__acc">
         ${REASONS.map(itemEl).join("")}
       </div>

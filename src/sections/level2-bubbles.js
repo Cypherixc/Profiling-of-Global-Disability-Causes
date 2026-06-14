@@ -142,7 +142,7 @@ function howToReadDiagram() {
       <text x="0" y="256" fill="currentColor" fill-opacity="0.8" font-size="13">Neoplasms</text>
       <text x="110" y="257" fill="${teal}" font-size="14" font-weight="600">5</text>
       <circle cx="161" cy="252" r="17" fill="none" stroke="currentColor" stroke-opacity="0.5" stroke-width="0.5"/>
-      <circle cx="161" cy="252" r="12" fill="${teal}" stroke="#202020" stroke-width="1"/>
+      <circle class="l2-howto-bubble" cx="161" cy="252" r="12" fill="${teal}" stroke-width="1"/>
 
       <!-- size scale -->
       ${scale(35, 8, "1%")}
@@ -182,7 +182,6 @@ export function renderLevel2Bubbles() {
   section.innerHTML = `
     <div class="container">
       <h2 class="section__title">Top level 2 Health Conditions Causing Disability by WHO Regions</h2>
-      <div class="section__rule"></div>
 
       <div class="level2__body">
         <aside class="level2__aside">

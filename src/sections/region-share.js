@@ -52,7 +52,7 @@ export function renderRegionShare() {
   section.innerHTML = `
     <div class="container">
       <h2 class="section__title">Percentage of Total Global Disabilities by WHO Regions</h2>
-      <div class="section__rule"></div>
+      <p class="section__intro">The WHO divides the world into six regions. The map and figures below show how the global burden of disability is shared among them — each region's portion of the total prevalence of disability worldwide. Hover over a region to isolate its share from the rest.</p>
 
       <div class="region-share__body">
         <div class="region-share__map">

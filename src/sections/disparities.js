@@ -200,7 +200,6 @@ export function renderDisparities() {
   section.innerHTML = `
     <div class="container">
       <h2 class="section__title">Disparities in the Prevalence of Causes of Disability by WHO Regions</h2>
-      <div class="section__rule"></div>
       <div class="disp-tabs" role="tablist">${tabs}</div>
 
       <div class="disp-card">

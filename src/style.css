@@ -60,9 +60,8 @@ body {
   padding-inline: var(--pad-x);
 }
 
-/* ---------- Scroll snap (one module ≈ one viewport) ---------- */
+/* ---------- Per-module layout ---------- */
 html {
-  scroll-snap-type: y proximity;
   scroll-behavior: smooth;
   /* keep anchored section tops clear of the fixed top bar */
   scroll-padding-top: 64px;
@@ -70,8 +69,6 @@ html {
 
 .hero,
 .section {
-  scroll-snap-align: start;
-  scroll-snap-stop: normal;
   min-height: 100vh;
 }
 
@@ -178,10 +175,12 @@ html {
   color: var(--c-text);
 }
 
-.section__rule {
-  height: 2px;
-  background: rgba(var(--c-fg-rgb), 0.25);
-  margin-top: 20px;
+.section__intro {
+  margin: 18px 0 0;
+  max-width: 70ch;
+  font-size: clamp(14px, 1.2vw, 16px);
+  line-height: 1.6;
+  color: var(--c-text-muted);
 }
 
 /* ---------- Region share ---------- */
@@ -310,6 +309,11 @@ html {
   margin: 28px 0 12px;
 }
 
+/* sample bubble separator ring matches the page background in either theme */
+.l2-howto-bubble {
+  stroke: var(--c-bg);
+}
+
 .level2__paragraph {
   font-size: 13px;
   line-height: 1.6;
@@ -401,7 +405,7 @@ html {
 
 .l2-bubble {
   z-index: 1;
-  border: 1px solid #202020; /* 1px inside stroke per Figma */
+  border: 1px solid var(--c-bg); /* 1px inside stroke per Figma */
   pointer-events: auto;
   cursor: pointer;
   transition: opacity 250ms ease, box-shadow 250ms ease;
@@ -598,7 +602,7 @@ html {
   left: 50%;
   transform: translate(-50%, -50%);
   border-radius: 50%;
-  border: 1px solid #202020;
+  border: 1px solid var(--c-bg);
   pointer-events: auto;
   cursor: pointer;
   transition: opacity 250ms ease, box-shadow 250ms ease;
@@ -1239,11 +1243,38 @@ html {
   }
 }
 
+/* Each ring spins about its own centre at a different rate, completing a whole
+   number of turns so they all come to rest aligned, hold, then loop. */
+.hr {
+  transform-box: fill-box;
+  transform-origin: center;
+  /* start after the entrance settles; same duration keeps every ring in sync */
+  animation-duration: 15s;
+  animation-delay: 1.4s;
+  animation-timing-function: cubic-bezier(0.45, 0, 0.25, 1);
+  animation-iteration-count: infinite;
+}
+.hr--1 { animation-name: hr-spin-cw2; }
+.hr--2 { animation-name: hr-spin-ccw3; }
+.hr--3 { animation-name: hr-spin-cw1; }
+.hr--4 { animation-name: hr-spin-ccw4; }
+.hr--5 { animation-name: hr-spin-cw1; }
+.hr--6 { animation-name: hr-spin-ccw2; }
+
+@keyframes hr-spin-cw1 { 0% { rotate: 0deg; } 70%, 100% { rotate: 360deg; } }
+@keyframes hr-spin-cw2 { 0% { rotate: 0deg; } 70%, 100% { rotate: 720deg; } }
+@keyframes hr-spin-ccw2 { 0% { rotate: 0deg; } 70%, 100% { rotate: -720deg; } }
+@keyframes hr-spin-ccw3 { 0% { rotate: 0deg; } 70%, 100% { rotate: -1080deg; } }
+@keyframes hr-spin-ccw4 { 0% { rotate: 0deg; } 70%, 100% { rotate: -1440deg; } }
+
 @media (prefers-reduced-motion: reduce) {
   .hero__rings,
   .hero__scroll svg {
     animation: none;
     opacity: 1;
+  }
+  .hr {
+    animation: none;
   }
 }
 
@@ -1298,8 +1329,10 @@ html {
 .topbar__link {
   position: relative;
   padding: 4px 0;
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
   color: var(--c-text-muted);
   text-decoration: none;
   white-space: nowrap;
