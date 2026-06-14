@@ -1160,23 +1160,24 @@ html {
   overflow: hidden;
   min-height: 0;
   display: flex;
-  /* top-aligned so the text reveals straight down instead of sliding as the
-     row grows (which read as a vertical "jump") */
+  /* top-aligned so the row reveals straight down without sliding */
   align-items: flex-start;
-  gap: clamp(24px, 4vw, 64px);
-  /* padding is static (incl. bottom) so only the row height animates */
-  padding: 0 clamp(20px, 3vw, 32px) 30px calc(clamp(20px, 3vw, 32px) + 42px);
+  gap: clamp(24px, 4vw, 48px);
+  /* bottom padding is 0 when collapsed (so the row closes fully) and grows
+     with the reveal */
+  padding: 0 clamp(20px, 3vw, 32px) 0 calc(clamp(20px, 3vw, 32px) + 42px);
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease, padding-bottom 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .acc-item.is-active .acc-item__inner {
   opacity: 1;
+  padding-bottom: 30px;
   transition-delay: 0.1s;
 }
 
 .acc-item__body {
-  flex: 1;
+  flex: 0 1 56%;
   margin: 0;
   font-size: 15px;
   line-height: 1.65;
@@ -1185,6 +1186,8 @@ html {
 
 .acc-item__illo {
   flex-shrink: 0;
+  /* pushed to the far right of the panel */
+  margin-left: auto;
   width: clamp(180px, 18vw, 264px);
   height: auto;
   /* illustrations ship dark/two-tone — normalise to clean line-art that
