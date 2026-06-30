@@ -691,10 +691,6 @@ html {
   text-transform: capitalize;
 }
 
-.level3.is-bubble-hover .l3-bubble:not(.is-active) {
-  opacity: 0.2;
-}
-
 /* Selection ring via ::after so it's independent of the hover glow
    (which uses box-shadow) and appears the instant a bubble is clicked. */
 .l3-bubble.is-selected::after {

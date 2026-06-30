@@ -9,7 +9,7 @@ const REASONS = [
     color: "#4690cd",
     illo: "/assets/why/why-1.svg",
     title: "Revealing Resource Allocation and Intervention Priorities",
-    body: "By understanding the diverse causes of disability across different regions, policymakers and decision-makers can allocate resources more effectively and set clearer priorities for intervention. Each region faces a distinct mix of challenges — shaped by its economy, environment, demographics, and health infrastructure — so a one-size-fits-all approach rarely works. Comparing these differences makes it possible to direct funding, staff, and programmes to where they will have the greatest impact, and to design targeted health policies and strategies that respond to the specific needs of each population.",
+    body: "By understanding the diverse causes of disability across different regions, policymakers and decision-makers can allocate resources more effectively and set clearer priorities for intervention. Each region faces a distinct mix of challenges, shaped by its economy, environment, demographics, and health infrastructure, so a one-size-fits-all approach rarely works. Comparing these differences makes it possible to direct funding, staff, and programmes to where they will have the greatest impact, and to design targeted health policies and strategies that respond to the specific needs of each population.",
   },
   {
     color: "#24aca4",
@@ -33,7 +33,7 @@ const REASONS = [
     color: "#8169ab",
     illo: "/assets/why/why-5.svg",
     title: "Supporting Global Collaboration and Cooperative Efforts",
-    body: "Understanding the causes of disability in different regions lays the foundation for genuine international collaboration. Many of the challenges behind disability — from chronic disease to injury and ageing populations — cross borders and cannot be solved by any single country alone. A shared, comparable picture of the data makes it easier to pool expertise, transfer technology, coordinate research, and run joint projects, so that nations can tackle global health challenges collectively and turn individual insights into coordinated, lasting progress.",
+    body: "Understanding the causes of disability in different regions lays the foundation for genuine international collaboration. Many of the challenges behind disability, from chronic disease to injury and ageing populations, cross borders and cannot be solved by any single country alone. A shared, comparable picture of the data makes it easier to pool expertise, transfer technology, coordinate research, and run joint projects, so that nations can tackle global health challenges collectively and turn individual insights into coordinated, lasting progress.",
   },
 ];
 

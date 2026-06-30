@@ -127,7 +127,6 @@ export function renderLevel3Top5() {
         </div>
       </div>
     </div>
-    <div class="l2-tooltip" role="status" aria-live="polite" hidden></div>
   `;
 
   wireBubbleHover(section);
@@ -170,7 +169,6 @@ function wireDetail(section) {
 
 function wireBubbleHover(section) {
   const matrix = section.querySelector(".level3__matrix");
-  const tip = section.querySelector(".l2-tooltip");
   let active = null;
   let savedZ = "";
 
@@ -184,28 +182,6 @@ function wireBubbleHover(section) {
     const cell = bubble.closest(".l3-cell");
     savedZ = cell.style.zIndex;
     cell.style.zIndex = "999";
-
-    const { cause, region, color, mean, lower, upper, rank } = bubble.dataset;
-    const ci = lower && upper ? `${pctText(+lower)}–${pctText(+upper)}` : "—";
-    tip.innerHTML = `
-      <div class="l2-tooltip__cause">${cause}</div>
-      <div class="l2-tooltip__region"><span class="l2-tooltip__dot" style="background:${color}"></span>${region}</div>
-      <div class="l2-tooltip__row"><span>Prevalence</span><strong>${pctText(+mean)}</strong></div>
-      <div class="l2-tooltip__row"><span>95% CI</span><span class="l2-tooltip__ci">${ci}</span></div>
-      <div class="l2-tooltip__rank">#${rank} in ${region}</div>
-    `;
-    tip.hidden = false;
-  };
-
-  const move = (e) => {
-    if (!active) return;
-    const pad = 14;
-    let x = e.clientX + pad;
-    let y = e.clientY + pad;
-    if (x + tip.offsetWidth > window.innerWidth - 8) x = e.clientX - tip.offsetWidth - pad;
-    if (y + tip.offsetHeight > window.innerHeight - 8) y = e.clientY - tip.offsetHeight - pad;
-    tip.style.left = `${x}px`;
-    tip.style.top = `${y}px`;
   };
 
   const clear = () => {
@@ -215,7 +191,6 @@ function wireBubbleHover(section) {
     active.style.boxShadow = "";
     const cell = active.closest(".l3-cell");
     if (cell) cell.style.zIndex = savedZ;
-    tip.hidden = true;
     active = null;
   };
 
@@ -223,7 +198,6 @@ function wireBubbleHover(section) {
     const b = e.target.closest(".l3-bubble");
     if (b) show(b);
   });
-  matrix.addEventListener("mousemove", move);
   matrix.addEventListener("mouseout", (e) => {
     const to = e.relatedTarget;
     if (active && (!to || !active.contains(to))) clear();
