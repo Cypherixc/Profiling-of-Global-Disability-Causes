@@ -1066,60 +1066,50 @@ html {
   }
 }
 
-/* ---------- Why important (accordion + resources) ---------- */
-.why__acc {
+/* ---------- Why important (five open reasons + resources) ---------- */
+/* The five reasons are parallel arguments, not a sequence, so they are all
+   open: the relationship between them only reads when they are on screen
+   together. Each row leads with its claim; the detail sits beside it. */
+.why__reasons {
   display: flex;
   flex-direction: column;
   gap: 0;
   margin-top: clamp(28px, 4vw, 48px);
 }
 
-.acc-item {
+.why-reason {
+  position: relative;
+  isolation: isolate;
+  padding: clamp(22px, 2.6vw, 30px) clamp(20px, 3vw, 32px);
   background: var(--c-bg);
-  border-left: 3px solid color-mix(in srgb, var(--c) 55%, transparent);
+  border-left: 3px solid var(--c);
   box-shadow: inset 0 -1px 0 rgba(var(--c-fg-rgb), 0.14);
-  transition: background 0.45s ease, border-color 0.45s ease;
 }
 
-.acc-item:first-child {
+.why-reason:first-child {
   box-shadow: inset 0 1px 0 rgba(var(--c-fg-rgb), 0.14),
     inset 0 -1px 0 rgba(var(--c-fg-rgb), 0.14);
 }
 
-.acc-item.is-active {
-  border-left-color: var(--c);
-  /* region colour glow at the top, fading into the page background */
+/* The same wash the accordion used on its open row, dialled down: five of
+   them are on screen at once now, where before there was only ever one. */
+.why-reason::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
   background: linear-gradient(180deg,
-    color-mix(in srgb, var(--c) 32%, var(--c-bg)) 0%,
-    var(--c-bg) 46%);
+    color-mix(in srgb, var(--c) 14%, transparent) 0%,
+    transparent 46%);
 }
 
-/* The heading carries no visual weight of its own — the button inside it does. */
-.acc-item__heading {
-  margin: 0;
-  font: inherit;
-}
-
-.acc-item__head {
-  width: 100%;
-  border: 0;
-  margin: 0;
-  background: none;
-  text-align: left;
-  font: inherit;
-  color: var(--c-text);
-  cursor: pointer;
+.why-reason__head {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 18px;
-  padding: 22px clamp(20px, 3vw, 32px);
 }
 
-.acc-item.is-active .acc-item__head {
-  cursor: default;
-}
-
-.acc-item__num {
+.why-reason__num {
   font-size: 22px;
   font-weight: 700;
   line-height: 1;
@@ -1128,69 +1118,45 @@ html {
   min-width: 24px;
 }
 
-.acc-item__title {
+.why-reason__title {
+  margin: 0;
   font-size: clamp(16px, 1.6vw, 21px);
   font-weight: 600;
   line-height: 1.3;
-  flex: 1;
 }
 
-.acc-item__chevron {
-  flex-shrink: 0;
-  width: 11px;
-  height: 11px;
-  border-right: 2px solid var(--c-text-muted);
-  border-bottom: 2px solid var(--c-text-muted);
-  transform: rotate(45deg);
-  transition: transform 0.4s ease;
-}
-
-.acc-item.is-active .acc-item__chevron {
-  transform: rotate(-135deg);
-}
-
-/* expandable body — grid-rows trick gives a smooth height transition */
-.acc-item__bodywrap {
+/* Claim left, detail right — the left column reads straight down as the
+   five-line version of the whole argument. Indented to clear the number. */
+.why-reason__cols {
   display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+  grid-template-columns: minmax(0, 0.62fr) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 64px);
+  margin-top: 14px;
+  padding-left: 42px;
 }
 
-.acc-item.is-active .acc-item__bodywrap {
-  grid-template-rows: 1fr;
-}
-
-.acc-item__inner {
-  overflow: hidden;
-  min-height: 0;
-  /* bottom padding is 0 when collapsed (so the row closes fully) and grows
-     with the reveal; left inset clears the number column */
-  padding: 0 clamp(20px, 3vw, 32px) 0 calc(clamp(20px, 3vw, 32px) + 42px);
-  opacity: 0;
-  transition: opacity 0.3s ease,
-    padding-bottom 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.acc-item.is-active .acc-item__inner {
-  opacity: 1;
-  padding-bottom: 30px;
-  transition-delay: 0.1s;
-}
-
-.acc-item__body {
+.why-reason__claim {
   margin: 0;
-  /* the illustration used to hold the right-hand side; keep the same measure */
-  max-width: 72ch;
+  font-size: clamp(16px, 1.5vw, 19px);
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--c-text);
+}
+
+.why-reason__detail {
+  margin: 0;
   font-size: 15px;
   line-height: 1.65;
-  color: rgba(var(--c-fg-rgb), 0.88);
+  color: rgba(var(--c-fg-rgb), 0.78);
 }
 
-.acc-item__head:focus-visible {
-  outline: 2px solid var(--c-text);
-  outline-offset: -2px;
+@media (max-width: 860px) {
+  .why-reason__cols {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding-left: 0;
+  }
 }
-
 /* ---------- Resources ---------- */
 .why__resources-head {
   margin-top: clamp(56px, 8vh, 96px);
@@ -1296,7 +1262,8 @@ html {
 /* The accent palette was picked for the dark ground; on white it drops to
    ~2.6:1, which fails WCAG AA for the small CTA text. Darken it for text use
    in the light theme only — the rail and the gradient keep the pure hue. */
-:root[data-theme="light"] .why-res__cta {
+:root[data-theme="light"] .why-res__cta,
+:root[data-theme="light"] .why-reason__num {
   color: color-mix(in srgb, var(--c) 60%, #000);
 }
 
@@ -1313,10 +1280,6 @@ html {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .acc-item,
-  .acc-item__bodywrap,
-  .acc-item__inner,
-  .acc-item__chevron,
   .why-res,
   .why-res::before {
     transition: none;
