@@ -1160,8 +1160,19 @@ html {
 
 /* Panel */
 .why-panels {
-  /* holds the row height steady so switching tabs does not jump the page */
-  min-height: 300px;
+  /* All five panels occupy the same cell, so the row is always as tall as the
+     tallest one and switching tabs cannot move the page. Between ~860 and
+     ~1024px the panel is the taller column, and without this the block jumped
+     by up to 52px. */
+  display: grid;
+}
+
+.why-panel {
+  grid-area: 1 / 1;
+}
+
+.why-panel.is-hidden {
+  visibility: hidden;
 }
 
 .why-panel:focus-visible {

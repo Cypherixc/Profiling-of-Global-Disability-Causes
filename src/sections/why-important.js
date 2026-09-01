@@ -9,10 +9,11 @@
 // Titles are Si's, shortened to fit the tab column on one line. Each original
 // stated its point twice — "Prevention and Control", "Awareness and Knowledge
 // Dissemination", "Collaboration and Cooperative Efforts" — so the redundant
-// half came off rather than the meaning. The claims and bodies replace the
-// placeholder prose transcribed from the mockup: same arguments, roughly half
-// the length, and deliberately five different sentence shapes — the originals
-// were structurally identical, which is why they read as one paragraph.
+// half came off rather than the meaning.
+//
+// Bodies are Si's original prose, restored at full length. Each claim above
+// them is new: the titles are abstract noun phrases, so without a claim an
+// unselected tab tells the reader nothing.
 
 const REASONS = [
   {
@@ -20,32 +21,32 @@ const REASONS = [
     title: "Revealing Resource Priorities",
     claim:
       "Money spread evenly is money spread wrong — regions do not carry the same burden.",
-    body: "Each region faces a distinct mix of challenges, shaped by its economy, environment, demographics and health infrastructure. A one-size-fits-all response rarely works. Comparing the differences lets funders direct money, staff and programmes to where they will do the most, rather than spreading them evenly.",
+    body: "By understanding the diverse causes of disability across different regions, policymakers and decision-makers can allocate resources more effectively and set clearer priorities for intervention. Each region faces a distinct mix of challenges, shaped by its economy, environment, demographics, and health infrastructure, so a one-size-fits-all approach rarely works. Comparing these differences makes it possible to direct funding, staff, and programmes to where they will have the greatest impact, and to design targeted health policies and strategies that respond to the specific needs of each population.",
   },
   {
     color: "#24aca4",
     title: "Guiding Prevention and Control",
     claim: "You cannot screen for a risk you have not located.",
-    body: "Comparison shows which risk factors concentrate where. That tells public-health teams what to screen for, whom to vaccinate and where to intervene early — decisions generic guidance, applied identically everywhere, cannot make for them. Intervening earlier is what actually lowers the rate.",
+    body: "Comparing the causes of disability between regions helps identify the key risk factors and conditions that affect each area most heavily. This insight is essential for shaping prevention and control measures that fit local circumstances, rather than generic guidance applied everywhere. By pinpointing where a particular disease or injury is concentrated, public-health teams can design tailored screening, vaccination, and awareness programmes, intervene earlier, and ultimately reduce disability rates while improving the overall health and resilience of the populations they serve.",
   },
   {
     color: "#63c1c2",
     title: "Improving Healthcare Equity",
     claim:
       "The regions carrying the heaviest burden are rarely the ones with the most clinicians.",
-    body: "Burden and capacity are not distributed the same way. Some regions carry far more disability and have far fewer clinicians, facilities and funds to meet it. Naming that mismatch is the first step to closing it, and to arguing for investment where the shortage is worst.",
+    body: "Understanding how the causes of disability vary around the world brings inequalities in healthcare services and resource distribution into sharp focus. Some regions carry a far heavier burden yet have far fewer clinicians, facilities, and funds to address it. Recognising these gaps is the first step toward closing them: it supports fairer allocation of medical resources, encourages investment where shortages are greatest, and promotes genuine equity in care, so that people everywhere have a comparable opportunity to prevent, treat, and live well with disability.",
   },
   {
     color: "#b297c7",
     title: "Increasing Awareness and Knowledge",
     claim: "A solution that works in one region is evidence, not coincidence.",
-    body: "When findings and working approaches move between countries, communities stop solving the same problem from scratch. Comparable data is what makes that transfer possible — it shows clinicians, educators and the public which risks actually matter where they live.",
+    body: "Comparing the causes of disability across global regions creates valuable opportunities for knowledge exchange and shared learning. When findings, data, and successful approaches move freely between countries, communities can learn from one another instead of repeating the same mistakes. This wider awareness helps the public, clinicians, and educators understand the specific health issues and risk factors that matter most in their context, encouraging informed behaviour change, stronger health literacy, and healthier, better-prepared communities over the long term.",
   },
   {
     color: "#8169ab",
     title: "Supporting Global Collaboration",
     claim: "The causes cross borders. No country can solve them alone.",
-    body: "Chronic disease, injury and ageing populations are not national problems with national fixes. A shared, comparable picture of the data is the precondition for pooling expertise, coordinating research and running joint programmes — you cannot cooperate on a problem each country measures differently.",
+    body: "Understanding the causes of disability in different regions lays the foundation for genuine international collaboration. Many of the challenges behind disability, from chronic disease to injury and ageing populations, cross borders and cannot be solved by any single country alone. A shared, comparable picture of the data makes it easier to pool expertise, transfer technology, coordinate research, and run joint projects, so that nations can tackle global health challenges collectively and turn individual insights into coordinated, lasting progress.",
   },
 ];
 
@@ -97,9 +98,9 @@ const tabEl = (r, i) => `
   </button>`;
 
 const panelEl = (r, i) => `
-  <div class="why-panel" role="tabpanel" id="why-panel-${i}"
+  <div role="tabpanel" id="why-panel-${i}"
     aria-labelledby="why-tab-${i}" tabindex="0" style="--c:${r.color}"
-    ${i === 0 ? "" : "hidden"}>
+    class="why-panel${i === 0 ? "" : " is-hidden"}">
     <div class="why-panel__rule"></div>
     <p class="why-panel__claim">${r.claim}</p>
     <p class="why-panel__body">${r.body}</p>
@@ -168,7 +169,10 @@ export function renderWhyImportant() {
       tab.setAttribute("aria-selected", String(on));
       // roving tabindex: only the selected tab is in the tab order
       tab.tabIndex = on ? 0 : -1;
-      panels[n].hidden = !on;
+      // not [hidden]: the panels stay stacked in one grid cell so the row
+      // keeps the height of the tallest, and switching tabs never moves the
+      // page. visibility:hidden still takes them out of the a11y tree.
+      panels[n].classList.toggle("is-hidden", !on);
     });
     if (moveFocus) tabs[i].focus();
   }
