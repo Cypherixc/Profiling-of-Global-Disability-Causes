@@ -1207,7 +1207,9 @@ html {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(180deg,
+  /* washes out from the rail rather than down from the top edge, so the
+     colour reads as coming from the bar itself */
+  background: linear-gradient(90deg,
     color-mix(in srgb, var(--c) 32%, transparent) 0%,
     transparent 46%);
   opacity: 0;
