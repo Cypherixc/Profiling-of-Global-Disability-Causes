@@ -1,10 +1,10 @@
 // "Why understanding and comparing the prevalence of causes of disability
 // in various regions globally is important?"
 //
-// Five parallel arguments, all open. They are a list, not a sequence — hiding
-// four of five behind a disclosure control meant the relationship between them
-// never assembled. Each row leads with a claim you can read without clicking;
-// the detail sits beside it.
+// Five parallel arguments as a vertical tab set: the titles stack in a left
+// column, the selected reason's claim and detail fill the panel on the right.
+// Standard WAI-ARIA tabs — roving tabindex, arrow/Home/End keys, one panel
+// visible at a time.
 //
 // Titles are Si's, from the Figma. The claims and bodies replace the
 // placeholder prose transcribed from the mockup: same arguments, roughly half
@@ -84,17 +84,23 @@ const RESOURCES = [
   },
 ];
 
-const reasonEl = (r, i) => `
-  <article class="why-reason" style="--c:${r.color}">
-    <div class="why-reason__head">
-      <span class="why-reason__num">${i + 1}</span>
-      <h3 class="why-reason__title">${r.title}</h3>
-    </div>
-    <div class="why-reason__cols">
-      <p class="why-reason__claim">${r.claim}</p>
-      <p class="why-reason__detail">${r.body}</p>
-    </div>
-  </article>`;
+const tabEl = (r, i) => `
+  <button class="why-tab${i === 0 ? " is-active" : ""}" role="tab" type="button"
+    id="why-tab-${i}" aria-controls="why-panel-${i}"
+    aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}"
+    style="--c:${r.color}">
+    <span class="why-tab__num">${i + 1}</span>
+    <span class="why-tab__title">${r.title}</span>
+  </button>`;
+
+const panelEl = (r, i) => `
+  <div class="why-panel" role="tabpanel" id="why-panel-${i}"
+    aria-labelledby="why-tab-${i}" tabindex="0" style="--c:${r.color}"
+    ${i === 0 ? "" : "hidden"}>
+    <div class="why-panel__rule"></div>
+    <p class="why-panel__claim">${r.claim}</p>
+    <p class="why-panel__body">${r.body}</p>
+  </div>`;
 
 const resourceEl = (r) => `
   <a class="why-res" style="--c:${r.color}" href="${r.href}"
@@ -113,8 +119,14 @@ export function renderWhyImportant() {
       <h2 class="section__title">Why understanding and comparing the prevalence of causes of disability in various regions globally is important?</h2>
       <div class="section__rule"></div>
 
-      <div class="why__reasons">
-        ${REASONS.map(reasonEl).join("")}
+      <div class="why__tabs">
+        <div class="why-tablist" role="tablist" aria-orientation="vertical"
+          aria-label="Reasons this comparison matters">
+          ${REASONS.map(tabEl).join("")}
+        </div>
+        <div class="why-panels">
+          ${REASONS.map(panelEl).join("")}
+        </div>
       </div>
 
       <div class="why__resources-head">
@@ -142,5 +154,37 @@ export function renderWhyImportant() {
       </div>
     </div>
   `;
+
+  const tabs = [...section.querySelectorAll(".why-tab")];
+  const panels = [...section.querySelectorAll(".why-panel")];
+
+  function select(i, moveFocus) {
+    tabs.forEach((tab, n) => {
+      const on = n === i;
+      tab.classList.toggle("is-active", on);
+      tab.setAttribute("aria-selected", String(on));
+      // roving tabindex: only the selected tab is in the tab order
+      tab.tabIndex = on ? 0 : -1;
+      panels[n].hidden = !on;
+    });
+    if (moveFocus) tabs[i].focus();
+  }
+
+  tabs.forEach((tab, i) => {
+    tab.addEventListener("click", () => select(i));
+    tab.addEventListener("keydown", (e) => {
+      const last = tabs.length - 1;
+      const to =
+        e.key === "ArrowDown" || e.key === "ArrowRight" ? (i === last ? 0 : i + 1)
+        : e.key === "ArrowUp" || e.key === "ArrowLeft" ? (i === 0 ? last : i - 1)
+        : e.key === "Home" ? 0
+        : e.key === "End" ? last
+        : null;
+      if (to === null) return;
+      e.preventDefault();
+      select(to, true);
+    });
+  });
+
   return section;
 }
