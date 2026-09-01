@@ -1066,45 +1066,77 @@ html {
   }
 }
 
-/* ---------- Why important (four reason cards + resources) ---------- */
-/* 2x2, against the resources row's 1x4 below — the two blocks should not read
-   as the same component twice. Nothing here is interactive, so there is no
-   hover state: the wash is static. */
-.why__cards {
+/* ---------- Why important (vertical tabs + resources) ---------- */
+.why__tabs {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: clamp(16px, 1.8vw, 24px);
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+  gap: clamp(28px, 4vw, 72px);
   margin-top: clamp(28px, 4vw, 48px);
 }
 
-.why-card {
-  position: relative;
-  isolation: isolate;
+.why-tablist {
   display: flex;
   flex-direction: column;
-  padding: clamp(22px, 2.6vw, 34px);
-  background: rgba(var(--c-fg-rgb), 0.045);
-  border-left: 3px solid var(--c);
 }
 
-/* washes out of the rail, same direction as the resource cards */
-.why-card::before {
+.why-tab {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  border: 0;
+  margin: 0;
+  padding: clamp(18px, 2.2vw, 24px) clamp(16px, 2vw, 24px);
+  background: none;
+  font: inherit;
+  text-align: left;
+  color: var(--c-text);
+  cursor: pointer;
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  border-left: 3px solid color-mix(in srgb, var(--c) 55%, transparent);
+  box-shadow: inset 0 -1px 0 rgba(var(--c-fg-rgb), 0.14);
+  transition: border-color 0.45s ease;
+}
+
+.why-tab:first-child {
+  box-shadow: inset 0 1px 0 rgba(var(--c-fg-rgb), 0.14),
+    inset 0 -1px 0 rgba(var(--c-fg-rgb), 0.14);
+}
+
+/* Wash runs out of the rail, matching the resource cards. Its own layer so it
+   can fade — background-image is not interpolable. */
+.why-tab::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
   background: linear-gradient(90deg,
-    color-mix(in srgb, var(--c) 16%, transparent) 0%,
+    color-mix(in srgb, var(--c) 32%, transparent) 0%,
     transparent 46%);
+  opacity: 0;
+  transition: opacity 0.45s ease;
 }
 
-.why-card__head {
-  display: flex;
-  align-items: baseline;
-  gap: 16px;
+.why-tab.is-active::before {
+  opacity: 1;
 }
 
-.why-card__num {
+.why-tab:hover:not(.is-active)::before {
+  opacity: 0.4;
+}
+
+.why-tab.is-active {
+  border-left-color: var(--c);
+  cursor: default;
+}
+
+.why-tab:focus-visible {
+  outline: 2px solid var(--c-text);
+  outline-offset: -2px;
+}
+
+.why-tab__num {
   font-size: 20px;
   font-weight: 700;
   line-height: 1;
@@ -1113,32 +1145,68 @@ html {
   min-width: 22px;
 }
 
-.why-card__title {
-  margin: 0;
+.why-tab__title {
   font-size: clamp(15px, 1.5vw, 19px);
   font-weight: 600;
   line-height: 1.3;
+  color: rgba(var(--c-fg-rgb), 0.6);
+  transition: color 0.3s ease;
+}
+
+.why-tab.is-active .why-tab__title,
+.why-tab:hover .why-tab__title {
   color: var(--c-text);
 }
 
-.why-card__claim {
-  margin: 18px 0 0;
-  font-size: clamp(17px, 1.7vw, 22px);
+/* Panel */
+.why-panels {
+  /* holds the row height steady so switching tabs does not jump the page */
+  min-height: 300px;
+}
+
+.why-panel:focus-visible {
+  outline: 2px solid var(--c-text);
+  outline-offset: 4px;
+}
+
+.why-panel__rule {
+  height: 2px;
+  width: 56px;
+  background: var(--c);
+  margin-bottom: 22px;
+}
+
+.why-panel__claim {
+  margin: 0;
+  font-size: clamp(19px, 2vw, 26px);
   font-weight: 500;
-  line-height: 1.4;
+  line-height: 1.35;
   color: var(--c-text);
 }
 
-.why-card__body {
-  margin: 14px 0 0;
+.why-panel__body {
+  margin: 20px 0 0;
+  max-width: 60ch;
   font-size: 15px;
-  line-height: 1.7;
+  line-height: 1.75;
   color: rgba(var(--c-fg-rgb), 0.78);
 }
 
 @media (max-width: 860px) {
-  .why__cards {
+  .why__tabs {
     grid-template-columns: 1fr;
+    gap: clamp(24px, 4vw, 36px);
+  }
+  .why-panels {
+    min-height: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .why-tab,
+  .why-tab::before,
+  .why-tab__title {
+    transition: none;
   }
 }
 /* ---------- Resources ---------- */
@@ -1249,7 +1317,7 @@ html {
    ~2.6:1, which fails WCAG AA for the small CTA text. Darken it for text use
    in the light theme only — the rail and the gradient keep the pure hue. */
 :root[data-theme="light"] .why-res__cta,
-:root[data-theme="light"] .why-card__num {
+:root[data-theme="light"] .why-tab__num {
   color: color-mix(in srgb, var(--c) 60%, #000);
 }
 
