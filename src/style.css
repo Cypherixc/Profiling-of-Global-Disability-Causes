@@ -1271,10 +1271,11 @@ html {
   inset: 0;
   z-index: -1;
   /* washes out from the rail rather than down from the top edge, so the
-     colour reads as coming from the bar itself */
+     colour reads as coming from the bar itself, and runs the full width
+     rather than stopping short of it */
   background: linear-gradient(90deg,
     color-mix(in srgb, var(--c) 32%, transparent) 0%,
-    transparent 46%);
+    transparent 100%);
   opacity: 0;
   transition: opacity 0.45s ease;
 }
