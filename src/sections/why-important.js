@@ -1,94 +1,43 @@
-// "Why it matters" — the closing module.
+// "Why understanding and comparing the prevalence of causes of disability
+// in various regions globally is important?"
 //
-// Structure follows the close of A Decade of Rain: state what the data found,
-// then hand the reader somewhere to go. Three claims, each carrying a number,
-// then four organisations working on what the numbers point at.
+// Vertical accordion — click a panel to expand it (collapses the others),
+// followed by the organisations working on what the page describes.
 //
-// The first two figures are COMPUTED from src/data/disability.json at render
-// time rather than typed in, so they can never drift from the dataset. The
-// third is external and is attributed in the copy.
+// Titles are from Si's Figma; bodies transcribed from the (faint) mockup and
+// still pending Si's confirmation.
 
-import data from "../data/disability.json";
-
-const REGION_COUNT = Object.keys(data.meta.regions).length;
-
-// Six-region mean for every cause at a given level — the same "global"
-// approximation the rest of the page uses.
-function globalMeans(rows) {
-  const totals = {};
-  rows.forEach((r) => {
-    totals[r.cause] = (totals[r.cause] || 0) + r.mean;
-  });
-  return Object.entries(totals)
-    .map(([cause, sum]) => ({ cause, mean: sum / REGION_COUNT }))
-    .sort((a, b) => b.mean - a.mean);
-}
-
-// Total level-2 burden carried by each region.
-function regionTotals() {
-  const totals = {};
-  data.level2.forEach((r) => {
-    totals[r.regionName] = (totals[r.regionName] || 0) + r.mean;
-  });
-  return Object.entries(totals)
-    .map(([region, total]) => ({ region, total }))
-    .sort((a, b) => b.total - a.total);
-}
-
-// Highest- and lowest-burden region for one level-2 cause.
-function spread(cause) {
-  const rows = data.level2
-    .filter((r) => r.cause === cause)
-    .sort((a, b) => b.mean - a.mean);
-  const hi = rows[0];
-  const lo = rows[rows.length - 1];
-  return { hi, lo, ratio: hi.mean / lo.mean };
-}
-
-const pct = (v, digits = 2) => `${(v * 100).toFixed(digits)}%`;
-
-const topCauses = globalMeans(data.level3);
-const topCause = topCauses[0];
-const runnersUp = topCauses.slice(1, 5).map((c) => c.cause.toLowerCase());
-
-const totals = regionTotals();
-const lightest = totals[totals.length - 1];
-const heaviest = totals[0];
-const hiv = spread("HIV/AIDS and sexually transmitted infections");
-
-const CLAIMS = [
+const REASONS = [
   {
     color: "#4690cd",
-    value: pct(topCause.mean),
-    // "Low back pain" — the largest single cause in the dataset.
-    title: topCause.cause,
-    body: `The single largest cause of disability on earth is not fatal, not rare, and not infectious. Behind it come ${runnersUp
-      .slice(0, 3)
-      .join(", ")} and ${runnersUp[3]} — chronic conditions, every one of them. What disables people is not what kills them.`,
+    title: "Revealing Resource Allocation and Intervention Priorities",
+    body: "By understanding the diverse causes of disability across different regions, policymakers and decision-makers can allocate resources more effectively and set clearer priorities for intervention. Each region faces a distinct mix of challenges, shaped by its economy, environment, demographics, and health infrastructure, so a one-size-fits-all approach rarely works. Comparing these differences makes it possible to direct funding, staff, and programmes to where they will have the greatest impact, and to design targeted health policies and strategies that respond to the specific needs of each population.",
   },
   {
     color: "#24aca4",
-    value: `${hiv.ratio.toFixed(0)}×`,
-    title: "The gap a global average hides",
-    body: `${hiv.hi.regionName} carries ${hiv.ratio.toFixed(0)} times the HIV and STI burden of the ${
-      hiv.lo.regionName
-    } — yet it also has the lowest total disability prevalence of any WHO region (${pct(
-      lightest.total,
-      1
-    )}, against ${heaviest.region}'s ${pct(
-      heaviest.total,
-      1
-    )}). Read the average and you would miss both facts.`,
+    title: "Guiding Prevention and Control Measures",
+    body: "Comparing the causes of disability between regions helps identify the key risk factors and conditions that affect each area most heavily. This insight is essential for shaping prevention and control measures that fit local circumstances, rather than generic guidance applied everywhere. By pinpointing where a particular disease or injury is concentrated, public-health teams can design tailored screening, vaccination, and awareness programmes, intervene earlier, and ultimately reduce disability rates while improving the overall health and resilience of the populations they serve.",
+  },
+  {
+    color: "#63c1c2",
+    title: "Improving Healthcare Services and Resource Distribution",
+    body: "Understanding how the causes of disability vary around the world brings inequalities in healthcare services and resource distribution into sharp focus. Some regions carry a far heavier burden yet have far fewer clinicians, facilities, and funds to address it. Recognising these gaps is the first step toward closing them: it supports fairer allocation of medical resources, encourages investment where shortages are greatest, and promotes genuine equity in care, so that people everywhere have a comparable opportunity to prevent, treat, and live well with disability.",
   },
   {
     color: "#b297c7",
-    value: "$200bn",
-    title: "Attention does not follow burden",
-    body:
-      "The minimum annual shortfall in global mental-health financing — for the second-largest cause of disability worldwide. Development aid for it fell from $300m to $200m between 2018 and 2021. Figures from United for Global Mental Health.",
+    title: "Increasing Awareness and Knowledge Dissemination",
+    body: "Comparing the causes of disability across global regions creates valuable opportunities for knowledge exchange and shared learning. When findings, data, and successful approaches move freely between countries, communities can learn from one another instead of repeating the same mistakes. This wider awareness helps the public, clinicians, and educators understand the specific health issues and risk factors that matter most in their context, encouraging informed behaviour change, stronger health literacy, and healthier, better-prepared communities over the long term.",
+  },
+  {
+    color: "#8169ab",
+    title: "Supporting Global Collaboration and Cooperative Efforts",
+    body: "Understanding the causes of disability in different regions lays the foundation for genuine international collaboration. Many of the challenges behind disability, from chronic disease to injury and ageing populations, cross borders and cannot be solved by any single country alone. A shared, comparable picture of the data makes it easier to pool expertise, transfer technology, coordinate research, and run joint projects, so that nations can tackle global health challenges collectively and turn individual insights into coordinated, lasting progress.",
   },
 ];
 
+// Chosen to follow what the dataset actually reports: the official programme,
+// the people the numbers describe, then the two largest causes on the page.
+// Every figure quoted here comes from the organisation's own material.
 const RESOURCES = [
   {
     color: "#4690cd",
@@ -124,13 +73,29 @@ const RESOURCES = [
   },
 ];
 
-const claimEl = (c) => `
-  <div class="why-claim" style="--c:${c.color}">
-    <p class="why-claim__value">${c.value}</p>
-    <div class="why-claim__rule"></div>
-    <h3 class="why-claim__title">${c.title}</h3>
-    <p class="why-claim__body">${c.body}</p>
-  </div>`;
+// The heading wraps the button (not the other way round): a <button> may only
+// contain phrasing content, so the old markup put an <h3> and a <p> inside one,
+// which made screen readers read each full body as the button's name.
+function itemEl(r, i) {
+  const open = i === 0;
+  return `
+    <div class="acc-item${open ? " is-active" : ""}" style="--c:${r.color}">
+      <h3 class="acc-item__heading">
+        <button class="acc-item__head" type="button" id="why-btn-${i}"
+          aria-expanded="${open}" aria-controls="why-panel-${i}">
+          <span class="acc-item__num">${i + 1}</span>
+          <span class="acc-item__title">${r.title}</span>
+          <span class="acc-item__chevron" aria-hidden="true"></span>
+        </button>
+      </h3>
+      <div class="acc-item__bodywrap" id="why-panel-${i}" role="region"
+        aria-labelledby="why-btn-${i}">
+        <div class="acc-item__inner">
+          <p class="acc-item__body">${r.body}</p>
+        </div>
+      </div>
+    </div>`;
+}
 
 const resourceEl = (r) => `
   <a class="why-res" style="--c:${r.color}" href="${r.href}"
@@ -146,20 +111,20 @@ export function renderWhyImportant() {
   section.className = "section why";
   section.innerHTML = `
     <div class="container">
-      <h2 class="section__title">The leading causes of disability are not the leading causes of death.</h2>
+      <h2 class="section__title">Why understanding and comparing the prevalence of causes of disability in various regions globally is important?</h2>
       <div class="section__rule"></div>
 
-      <div class="why__claims">
-        ${CLAIMS.map(claimEl).join("")}
+      <div class="why__acc">
+        ${REASONS.map(itemEl).join("")}
       </div>
 
-      <div class="why__bridge">
-        <p class="why__bridge-text">
+      <div class="why__resources-head">
+        <h3 class="why__resources-title">Where this goes next</h3>
+        <p class="why__resources-intro">
           A dataset can show the shape of the problem and where it falls hardest.
-          It cannot show what living inside it is like, and it cannot fix any of it.
-          The organisations below can: they hold the evidence, they are led by the
-          people the numbers describe, and they work on the causes this page found
-          at the top of the list.
+          These are the organisations working on it — they hold the evidence, they
+          are led by the people the numbers describe, and they work on the causes
+          this page ranks at the top.
         </p>
       </div>
 
@@ -178,5 +143,19 @@ export function renderWhyImportant() {
       </div>
     </div>
   `;
+
+  const items = [...section.querySelectorAll(".acc-item")];
+  items.forEach((item) => {
+    const btn = item.querySelector(".acc-item__head");
+    btn.addEventListener("click", () => {
+      if (item.classList.contains("is-active")) return;
+      items.forEach((it) => {
+        const on = it === item;
+        it.classList.toggle("is-active", on);
+        it.querySelector(".acc-item__head").setAttribute("aria-expanded", String(on));
+      });
+    });
+  });
+
   return section;
 }
